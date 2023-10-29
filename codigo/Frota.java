@@ -28,6 +28,11 @@ public class Frota {
         return relatorio.toString();
     }
 
+    /**
+     * Função do tipo Veiculo que retorna um objeto veiculo ou null, caso não encontre. Ele recebe uma placa e itera todos os veiculos da frota.
+     * @param placa do veiculo a ser pesquisado.
+     * @return objeto Veiculo encontrado ou null.
+     */
     public Veiculo localizarVeiculo(String placa) {
         for (Veiculo veiculo : veiculos) {
             if(placa.equals(veiculo.getPlaca())) {
@@ -69,8 +74,20 @@ public class Frota {
         return veiculoAtual;
     } 
 
-    /*
+    /***
+     * Função do tipo Veiculo que retorna o veiculo com maior quilometragem media percorrida. Ele itera os veiculos calculando a media de km totais rodados pela quantidade de rotas feitas.
+     * @return veiculoAtual = veiculo com maior KM média da frota.
+     */
     public Veiculo maiorKMMedia() {
+        double maiorMediaAtual=0;
+        Veiculo veiculoAtual=null;
+
+        for (Veiculo veiculo : veiculos) {
+            if((veiculo.kmTotal()/veiculo.getQuantRotas())>maiorMediaAtual) {
+                maiorMediaAtual = (veiculo.kmTotal()/veiculo.getQuantRotas());
+                veiculoAtual = veiculo;
+            }
+        }
         return veiculoAtual;
-    } */
+    } 
 }
