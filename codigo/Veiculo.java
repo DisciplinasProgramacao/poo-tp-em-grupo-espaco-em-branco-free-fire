@@ -64,7 +64,7 @@ public class Veiculo {
             totalReabastecido += (tanqueMax.autonomiaMaxima() - tanqueAtual.autonomiaAtual());
         }
 
-        tanqueAtual -= (rota.getQuilometragem() / CONSUMO);
+        tanqueAtual.desabastecer(rota.getQuilometragem() / CONSUMO);
     }
 
     public int getMAX_ROTAS() {
