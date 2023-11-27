@@ -1,11 +1,11 @@
 package codigo;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 public class Rota {
 
     private double quilometragem;
-    private Date data;
+    private LocalDate data;
 
     public String relatorio() {
         return "";
@@ -15,8 +15,11 @@ public class Rota {
         return quilometragem;
     }
 
-    public Date getData() {
+    public LocalDate getData() {
         return data;
     }
 
+    public void setData(LocalDate data) {
+        this.data = data;
+    }
 }
