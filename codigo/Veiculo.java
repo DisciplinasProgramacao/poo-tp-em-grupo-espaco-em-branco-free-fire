@@ -27,16 +27,14 @@ public class Veiculo {
             quantRotas++;
             percorrerRota(rota);
             if (rotas[0] != null) {
-                // if verificar se o mes da rotas[0] == ao mês do rota.getData
-                // apenas deixar seguir o processo
-                // else if se a data for diferente
-                /*
-                 * for(int i = 0; rotas.length; i++){
-                 * rotas[i] = null;
-                 * quantRotas = 0;
-                 * 
-                 * }
-                 */
+                if (rotas[0].getData() != rota.getData()) {
+                    return false;
+                } else if (rotas[0].getData() == rota.getData()) {
+                    for (int i = 0; i < rotas.length; i++) {
+                        rotas[i] = null;
+                        quantRotas = 0;
+                    }
+                }
                 return true;
             }
         }
