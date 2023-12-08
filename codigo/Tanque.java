@@ -67,4 +67,8 @@ public class Tanque {
     public double autonomiaAtual() {
         return capacidadeAtual * combustivel.getConsumo();
     }
+
+    public double getConsumo(){
+        return combustivel.getConsumo();
+    }
 }
