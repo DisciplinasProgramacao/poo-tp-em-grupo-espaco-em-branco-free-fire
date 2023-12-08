@@ -126,7 +126,7 @@ public class Veiculo {
             totalReabastecido += (tanqueDoVeiculo.autonomiaMaxima() - tanqueDoVeiculo.autonomiaAtual());
         }
 
-        tanqueDoVeiculo.desabastecer(quilometragemDaRota / CONSUMO);
+        tanqueDoVeiculo.consumirCombustivel(quilometragemDaRota / CONSUMO);
     }
 
     public boolean verificarManutencaoPeriodica(double quilometragemDaRota) {

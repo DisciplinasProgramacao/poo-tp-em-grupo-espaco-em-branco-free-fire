@@ -1,59 +1,70 @@
 package codigo;
 
 public class Tanque {
-    private final double CONSUMO;
     private double capacidadeMaxima;
     private double capacidadeAtual;
-
-    Tanque (double consumo, double capacidadeMaxima) {
-        this.CONSUMO = consumo;
-        this.capacidadeMaxima = capacidadeMaxima;
-        this.capacidadeAtual = capacidadeMaxima;
-    }
-    
+    private EtipoCombustivel combustivel;
 
     /**
-     * Função que abastece o tanque com a quantidade de litros especificada pelo usuário. Caso
-     * a quantidade abastecida ultrapasse a capacidade máxima, será retornado a capacidade máxima.
-     * 
+     * Construtor do tanque.
+     *
+     * @param capacidadeMaxima A capacidade máxima do tanque em litros.
+     * @param combustivel      O tipo de combustível que o tanque armazena.
+     */
+    Tanque(double capacidadeMaxima, EtipoCombustivel combustivel) {
+        this.capacidadeMaxima = capacidadeMaxima;
+        this.capacidadeAtual = capacidadeMaxima;
+        this.combustivel = combustivel;
+    }
+
+    /**
+     * Abastece o tanque com a quantidade de litros especificada pelo usuário. Caso
+     * a quantidade abastecida ultrapasse a capacidade máxima, será retornado o
+     * quanto foi possível abastecer.
+     *
      * @param litros A quantidade de litros a ser abastecida.
      * @return A capacidade atual do tanque após o abastecimento.
      */
     public double abastecer(double litros) {
         if (litros > 0) {
             double capacidadeRestante = capacidadeMaxima - capacidadeAtual;
-            if (litros <= capacidadeRestante) {
-                capacidadeAtual += litros;
-            } else {
-                capacidadeAtual = capacidadeMaxima;
-            }
+            double litrosAbastecidos = Math.min(litros, capacidadeRestante); // Esse método retorna o menor valor a ser
+                                                                             // abastecido
+            capacidadeAtual += litrosAbastecidos;
         }
         return capacidadeAtual;
     }
-
 
     /**
-     * Função que desabastece o tanque com a quantidade de litros gastos com base no consumo por quilometros rodados.
-     * 
-     * @param litros A quantidade de litros a ser retirada.
-     * @return A capacidade atual do tanque após a retirada.
+     * Consome a quantidade de litros com base no consumo por quilômetro rodado.
+     *
+     * @param litros A quantidade de litros a ser consumida.
+     * @return A capacidade atual do tanque após o consumo.
      */
-    public double desabastecer(double litros) {
+    public double consumirCombustivel(double litros) {
         if (litros > 0) {
-            if (litros <= capacidadeAtual) {
-                capacidadeAtual -= litros;
-            } else {
-                capacidadeAtual = 0;
-            }
+            capacidadeAtual = Math.max(capacidadeAtual - litros, 0);
         }
         return capacidadeAtual;
     }
 
+    /**
+     * Calcula a autonomia máxima do tanque com base no consumo por quilômetro
+     * rodado.
+     *
+     * @return A autonomia máxima do tanque em quilômetros.
+     */
     public double autonomiaMaxima() {
-        return capacidadeMaxima * CONSUMO;
-    } 
+        return capacidadeMaxima * combustivel.getConsumo();
+    }
 
+    /**
+     * Calcula a autonomia atual do tanque com base no consumo por quilômetro
+     * rodado.
+     *
+     * @return A autonomia atual do tanque em quilômetros.
+     */
     public double autonomiaAtual() {
-        return capacidadeAtual * CONSUMO;
+        return capacidadeAtual * combustivel.getConsumo();
     }
 }
