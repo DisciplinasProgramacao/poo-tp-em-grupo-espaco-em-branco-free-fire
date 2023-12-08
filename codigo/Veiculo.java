@@ -68,12 +68,12 @@ public class Veiculo {
         if (verificarManutencaoPorPeca(rota.getQuilometragem()))
             manutencoes.add(new Manutencao(EtipoManutencao.TROCAPECA, rota.getData()));
 
-        if (autonomiaAtual() < rota.getQuilometragem() / CONSUMO) {
+        if (autonomiaAtual() < rota.getQuilometragem() / tanqueDoVeiculo.getConsumo()) {
             abastecer(tanqueDoVeiculo.autonomiaMaxima() - tanqueDoVeiculo.autonomiaAtual());
             totalReabastecido += (tanqueDoVeiculo.autonomiaMaxima() - tanqueDoVeiculo.autonomiaAtual());
         }
 
-        tanqueDoVeiculo.consumirCombustivel(rota.getQuilometragem() / CONSUMO);
+        tanqueDoVeiculo.consumirCombustivel(rota.getQuilometragem() / tanqueDoVeiculo.getConsumo());
     }
 
     public boolean verificarManutencaoPreventiva(double quilometragemDaRota) {
