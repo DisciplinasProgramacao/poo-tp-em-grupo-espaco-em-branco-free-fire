@@ -37,6 +37,7 @@ public class Frota {
             return false;
 
         veiculos.put(placa, veiculo);
+        tamanhoFrota++;
             return true;
     }
 
