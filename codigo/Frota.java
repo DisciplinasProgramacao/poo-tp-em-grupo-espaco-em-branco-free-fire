@@ -1,17 +1,55 @@
 package codigo;
 
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
+
 public class Frota {
     private int tamanhoFrota;
-    private Veiculo veiculos[];
+    private Map<String, Veiculo> veiculos;
 
     /***
      * Função construtura da classe, ela recebe uma array de veiculos e determina o tamanho da frota pelo array da lista.
      * @param veiculos = Array de Veiculos
      */
-    Frota(Veiculo veiculos[]) {
-        tamanhoFrota+= veiculos.length;
+    Frota(Map<String, Veiculo> veiculos) {
+        tamanhoFrota+= veiculos.size();
         this.veiculos = veiculos;
     }
+
+    /***
+     * Função construtura da classe, ela não recebe parametros, inicializando o tamanho da frota com 0 e instanciando o HashMap.
+     */
+    Frota() {
+        tamanhoFrota=0;
+        veiculos = new HashMap<String,Veiculo>();
+    }
+
+
+    /***
+     * Função de tipo boolean que retorna se foi possivel adicionar o veiculo, ou se o carro já foi adicionado.
+     * @param placa = Placa do veiculo a ser adicionado
+     * @param veiculo = Veiculo a ser adicionado
+     * @return boolean true, se adicionou e false, caso não.
+     */
+    public boolean addVeiculo(String placa, Veiculo veiculo) {
+        if(veiculos.containsKey(placa)) 
+            return false;
+
+        veiculos.put(placa, veiculo);
+            return true;
+    }
+
+    /***
+     * Função de tipo Veiculo que retorna o veiculo removido caso, exista, caso contrario retorna null
+     * @param placa = Placa do veiculo a ser removido
+     * @return Veiculo removido ou null, caso não tenha sido removido.
+     */
+    public Veiculo removerVeiculo(String placa) {
+        return veiculos.remove(placa);
+    }
+
+
 
     /***
      * Função do tipo String que retorna o relatorio da frota contendo seu tamanho e informações da lista de veiculos.
@@ -22,9 +60,9 @@ public class Frota {
         relatorio.append("Tamanho: "+tamanhoFrota);
         relatorio.append("\nLista de veiculos:");
 
-        for (Veiculo veiculo : veiculos) {
-            relatorio.append("\n"+veiculo.toString());
-        }
+        veiculos.values().stream()
+                         .forEach(v -> relatorio.append("\n"+v.toString()));
+
         return relatorio.toString();
     }
 
@@ -34,14 +72,11 @@ public class Frota {
      * @return objeto Veiculo encontrado ou null.
      */
     public Veiculo localizarVeiculo(String placa) {
-        for (Veiculo veiculo : veiculos) {
-            if(placa.equals(veiculo.getPlaca())) {
-                System.out.println();
-                return veiculo;
-            }
-        }
-        System.err.print("Não existe veiculo com placa: "+placa);
-        return null;
+        return veiculos.entrySet().stream()
+                .filter(v-> v.getKey().equals(placa))
+                .findFirst() //assim que encontrar já envia, evitando percorrer se já encontrou.
+                .map(Map.Entry::getValue)
+                .orElse(null);
     }
 
     /***
@@ -50,44 +85,32 @@ public class Frota {
      */
     public double quilometragemTotal() {
         double qTotal=0;
-        for (Veiculo veiculo : veiculos) {
-            qTotal+=veiculo.kmTotal();
-        }
-
+        qTotal = veiculos.values().stream()
+                                  .mapToDouble(Veiculo::kmTotal)
+                                  .sum();
         return qTotal;
     }
 
     /***
      * Função do tipo Veiculo que retorna o veiculo com maior quilometragem total percorrida.
-     * @return veiculoAtual = veiculo com maior KM total da frota.
+     * @return Veiculo com maior KM total da frota.
      */
     public Veiculo maiorKMTotal() {
-        double maiorKMAtual=0;
-        Veiculo veiculoAtual=null;
 
-        for (Veiculo veiculo : veiculos) {
-            if(veiculo.kmTotal()>maiorKMAtual) {
-                maiorKMAtual = veiculo.kmTotal();
-                veiculoAtual = veiculo;
-            }
-        }
-        return veiculoAtual;
+        return veiculos.values().stream()                        
+                         .max(Comparator.comparing(Veiculo::kmTotal))
+                         .orElse(null);
     } 
 
     /***
      * Função do tipo Veiculo que retorna o veiculo com maior quilometragem media percorrida. Ele itera os veiculos calculando a media de km totais rodados pela quantidade de rotas feitas.
-     * @return veiculoAtual = veiculo com maior KM média da frota.
+     * @return Veiculo com maior KM média da frota.
      */
     public Veiculo maiorKMMedia() {
-        double maiorMediaAtual=0;
-        Veiculo veiculoAtual=null;
-
-        for (Veiculo veiculo : veiculos) {
-            if((veiculo.kmTotal()/veiculo.getQuantRotas())>maiorMediaAtual) {
-                maiorMediaAtual = (veiculo.kmTotal()/veiculo.getQuantRotas());
-                veiculoAtual = veiculo;
-            }
-        }
-        return veiculoAtual;
+        return veiculos.values().stream()
+                        .max((v1, v2) -> {
+                            return Double.compare(v1.kmTotal() / v1.getQuantRotas(), v2.kmTotal() / v2.getQuantRotas());
+                        })
+                        .orElse(null);
     } 
 }
