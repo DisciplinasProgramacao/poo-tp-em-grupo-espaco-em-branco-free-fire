@@ -11,7 +11,7 @@ public class Tanque {
      * @param tamanhoTanque O tamanho do tanque em litros.
      * @param combustivel   O tipo de combustível que o tanque armazena.
      */
-    Tanque(EnumTipoVeiculo tamanhoTanque, EtipoCombustivel combustivel) {
+    Tanque(ETipoVeiculo tamanhoTanque, EtipoCombustivel combustivel) {
         this.capacidadeMaxima = tamanhoTanque.getTamanhoTanque(); // Obtendo a capacidade máxima do tipo de veículo
         this.capacidadeAtual = capacidadeMaxima;
         this.combustivel = combustivel;
@@ -68,7 +68,7 @@ public class Tanque {
         return capacidadeAtual * combustivel.getConsumo();
     }
 
-    public double getConsumo(){
+    public double getConsumo() {
         return combustivel.getConsumo();
     }
 }
