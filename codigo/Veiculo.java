@@ -15,10 +15,10 @@ public class Veiculo {
     private ETipoVeiculo tipoVeiculo;
     private LinkedList<Manutencao> manutencoes = new LinkedList<>();
 
-    Veiculo(String placa, ETipoVeiculo tipoVeiculo, Tanque tanqueDoVeiculo) {
+    Veiculo(String placa, ETipoVeiculo tipoVeiculo, EtipoCombustivel combustivelDoVeiculo) {
         this.placa = placa;
         this.tipoVeiculo = tipoVeiculo;
-        this.tanqueDoVeiculo = tanqueDoVeiculo;
+        this.tanqueDoVeiculo = new Tanque(tipoVeiculo, combustivelDoVeiculo);
     }
 
     public boolean addRota(Rota rota) {
@@ -46,9 +46,10 @@ public class Veiculo {
         return tanqueDoVeiculo.abastecer(litros);
     }
 
-    public double kmNoMes(Month mes) {
+    public double kmNoMes(LocalDate dataConsulta) {
         double somaDosKmNoMes = mapaDeRotas.entrySet().stream()
-                .filter(e -> e.getKey().getMonth() == mes)
+                .filter(e -> e.getKey().getMonth() == dataConsulta.getMonth()
+                        && e.getKey().getYear() == dataConsulta.getYear())
                 .mapToDouble(e -> e.getValue().getQuilometragem())
                 .sum();
         return somaDosKmNoMes;
