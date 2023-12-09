@@ -9,14 +9,14 @@ public class Rota {
     private LocalDate data;
 
     
-    public Rota(double quilometragem) {
+    public Rota(double quilometragem, LocalDate data) {
         this.quilometragem = quilometragem;
-        this.data = LocalDate.now();
+        this.data = data;
     }
 
-    public String relatorio() {
+    public String toString() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        return "Rota: "+data.format(formatter)+"\nQuilometragem: "+quilometragem+"";
+        return " - "+data.format(formatter)+" | Quilometragem: "+quilometragem+"";
     }
 
     public double getQuilometragem() {
