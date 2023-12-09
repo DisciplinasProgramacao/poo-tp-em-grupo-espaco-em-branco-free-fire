@@ -1,5 +1,6 @@
 package codigo;
 
+import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
@@ -62,7 +63,7 @@ public class Frota {
         relatorio.append("\nLista de veiculos:");
 
         veiculos.values().stream()
-                         .forEach(v -> relatorio.append("\n"+v.toString()));
+                         .forEach(v -> relatorio.append("\n"+v.relatorioRotas()));
 
         return relatorio.toString();
     }
@@ -114,4 +115,48 @@ public class Frota {
                         })
                         .orElse(null);
     } 
+
+    public String quilometragemTotalDeVeiculo(String placa) {
+        Veiculo veiculoEncontrado = localizarVeiculo(placa);
+        
+        if( veiculoEncontrado !=null)
+            return "Veiculo de placa: "+placa + " percorreu "+ localizarVeiculo(placa).kmTotal()+ " quilômetros no total.";
+        
+        return null; //throws?
+    }
+
+    public String combustivelConsumido(String placa) {
+        Veiculo veiculoEncontrado = localizarVeiculo(placa);
+
+        if( veiculoEncontrado !=null)
+            return "Veiculo de placa: "+placa + " consumiu "+ localizarVeiculo(placa).getTotalReabastecido()+ " livros de combustivel.";
+        
+        return null; //throws?
+    }
+
+    public double combustivelTotalConsumido() { //qual dos dois?
+        return veiculos.values().stream()
+                       .mapToDouble(Veiculo::getTotalReabastecido)
+                       .sum();
+    }
+
+
+    public String quilometragemDeVeiculoNoMes(LocalDate data, String placa) {
+        Veiculo veiculoEncontrado = localizarVeiculo(placa);
+        
+        if( veiculoEncontrado !=null)
+            return "Veiculo de placa: "+placa + " percorreu "+ localizarVeiculo(placa).kmNoMes(data)+ " quilômetros.";
+        
+        return null; //throws?
+    }
+
+    public String relatorioDespesasDeVeiculo(String placa) {
+        Veiculo veiculoEncontrado = localizarVeiculo(placa);
+
+        if( veiculoEncontrado !=null)
+            return localizarVeiculo(placa).relatorioRotas();
+
+        return null; //throws?
+    }
+
 }
