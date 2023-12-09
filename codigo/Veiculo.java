@@ -2,7 +2,6 @@ package codigo;
 
 import java.util.stream.IntStream;
 import java.time.LocalDate;
-import java.time.Month;
 import java.util.*;
 
 public class Veiculo {
@@ -14,18 +13,20 @@ public class Veiculo {
     private double totalReabastecido;
     private ETipoVeiculo tipoVeiculo;
     private LinkedList<Manutencao> manutencoes = new LinkedList<>();
+    private double despesa;
 
     Veiculo(String placa, ETipoVeiculo tipoVeiculo, EtipoCombustivel combustivelDoVeiculo) {
         this.placa = placa;
         this.tipoVeiculo = tipoVeiculo;
         this.tanqueDoVeiculo = new Tanque(tipoVeiculo, combustivelDoVeiculo);
+        this.mapaDeRotas = new HashMap<>();
+        this.despesa = 0;
     }
 
     public boolean addRota(Rota rota) {
         if (autonomiaMaxima() >= rota.getQuilometragem()) {
-            LocalDate dataDaRota = rota.getData();
-            if (verificarCapacidadeDeRota(dataDaRota)) {
-                mapaDeRotas.put(dataDaRota, rota);
+            if (verificarCapacidadeDeRota(rota.getData())) {
+                mapaDeRotas.put(rota.getData(), rota);
                 percorrerRota(rota);
                 return true;
             }
@@ -101,7 +102,8 @@ public class Veiculo {
 
     public boolean verificarCapacidadeDeRota(LocalDate dataDaRota) {
         int cont = (int) mapaDeRotas.entrySet().stream()
-                .filter(e -> e.getKey().getMonth() == dataDaRota.getMonth())
+                .filter(e -> e.getKey().getMonth() == dataDaRota.getMonth()
+                        && e.getKey().getYear() == dataDaRota.getYear())
                 .count();
 
         if (cont < MAX_ROTAS)
@@ -110,14 +112,19 @@ public class Veiculo {
         return false;
     }
 
+    public double despesasDoVeiculo() {
+
+        return 0.0;
+
+    }
+
     public String relatorioRotas() {
         StringBuilder sb = new StringBuilder();
         sb.append("\tRelatorio do " + ETipoVeiculo.values() + " de placa: " + placa + "\n");
         sb.append("Lista de rotas executadas pelo veiculo\n");
         mapaDeRotas.entrySet().stream()
                 .sorted(Map.Entry.comparingByKey())
-                .forEach(e -> sb.append(
-                        "Data: " + e.getKey() + " Quilometragem da Rota: " + e.getValue().getQuilometragem() + "\n"));
+                .forEach(e -> sb.append(e.toString() + "\n"));
 
         return sb.toString();
     }
