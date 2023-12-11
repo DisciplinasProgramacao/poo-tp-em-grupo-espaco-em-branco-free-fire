@@ -1,18 +1,23 @@
 package codigo;
 
 import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 
 public class App {
 
+    static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
     static Frota frota = new Frota();
     static Scanner sc;
 
-    public static int menu(String nomeArquivo) throws FileNotFoundException {
+    public static int menu(String nomeArquivo) throws IOException {
         limparTela();
         File arqMenu = new File(nomeArquivo);
-        Scanner leitor = new Scanner(arqMenu, "UTF-8");
+        Scanner leitor = new Scanner(arqMenu, StandardCharsets.UTF_8);
         System.out.println(leitor.nextLine());
         System.out.println("==========================");
         int contador = 1;
@@ -56,22 +61,14 @@ public class App {
     }
 
     public static Veiculo criarVeiculo() {
-        return new Veiculo("AAA-1234", ETipoVeiculo.CARRO, new Tanque(EnumTipoVeiculo.CARRO, EtipoCombustivel.GASOLINA));
+        String placa = leitura("Digite a placa do veículo");
+        String tipoVeiculo = leitura("Digite o tipo do veículo (CARRO, VAN, FURGAO, CAMINHAO)");
+        String tipoCombustivel = leitura("Digite o tipo de combustível do veículo (ALCOOL, GASOLINA, DIESEL)");
 
-        // Sugestão de modificação do construtor da classe Veiculo, para aumentar o nível de abstração
-        // não exigindo que a classe App saiba o que é um tanque.
-
-//        String placa = leitura("Digite a placa do veículo");
-//        String tipo = leitura("Digite o tipo do veículo (CARRO, VAN, FURGAO, CAMINHAO)");
-//        String combustivel = leitura("Digite o tipo de combustível do veículo (ALCOOL, GASOLINA, DIESEL)");
-//
-//        EtipoCombustivel tipoCombustivel = EtipoCombustivel.valueOf(combustivel.toUpperCase());
-//        EnumTipoVeiculo tipoVeiculo = EnumTipoVeiculo.valueOf(tipo.toUpperCase());
-//
-//        return new Veiculo(placa, tipoVeiculo, tipoCombustivel);
+        return new Veiculo(placa, tipoVeiculo, tipoCombustivel);
     }
 
-    public static int menuRelatorio(int opcao) {
+    public static void menuRelatorio(int opcao) {
         limparTela();
         String response;
         switch (opcao) {
@@ -99,34 +96,43 @@ public class App {
                 System.out.println(response);
                 pausa();
             }
-            // A partir daqui, sugestão de métodos da classe Frota não implementados
-//                case 5 -> {
-//                    limparTela();
-//                    response = frota.combustivelConsumido(leitura("Digite a placa do veículo"));
-//                    System.out.println(response);
-//                    pausa();
-//                }
-//                case 6 -> {
-//                    limparTela();
-//                    response = frota.quilometragemDeVeiculoNoMes(new LocalDate.now(), informeVeiculo());
-//                    System.out.println(response);
-//                    pausa();
-//                }
-//                case 7 -> {
-//                    limparTela();
-//                    response = frota.quilometragemTotalDeVeiculo(informeVeiculo());
-//                    System.out.println(response);
-//                }
-//                case 8 -> {
-//                    limparTela();
-//                    response = frota.relatorioDespesasDeVeiculo(informeVeiculo());
-//                    System.out.println(response);
-//                }
+            case 5 -> {
+                limparTela();
+                response = frota.combustivelConsumido(informeVeiculo());
+                System.out.println(response);
+                pausa();
+            }
+            case 6 -> {
+                limparTela();
+                response = frota.quilometragemDeVeiculoNoMes(informeData(), informeVeiculo());
+                System.out.println(response);
+                pausa();
+            }
+            case 7 -> {
+                limparTela();
+                response = frota.quilometragemTotalDeVeiculo(informeVeiculo());
+                System.out.println(response);
+            }
+            case 8 -> {
+                limparTela();
+                response = frota.relatorioDespesasDeVeiculo(informeVeiculo());
+                System.out.println(response);
+            }
+            case 9 -> {
+                limparTela();
+                response = frota.relatorioRotasDeVeiculo(informeVeiculo());
+                System.out.println(response);
+            }
         }
         return 0;
     }
 
-    public String informeVeiculo() {
+    public static LocalDate informeData() {
+        String data = leitura("Informe uma data (dd/mm/aaaa)");
+        return LocalDate.parse(data, DATE_TIME_FORMATTER);
+    }
+
+    public static String informeVeiculo() {
         return leitura("Digite a placa do veículo");
     }
 
@@ -140,17 +146,29 @@ public class App {
             }
             case 2 -> {
                 limparTela();
-                String placa = leitura("Digite a placa do veículo");
-                frota.removerVeiculo(placa);
+                // TODO: Implementar
             }
             case 3 -> {
                 limparTela();
-                // TODO: Implementar
+                String placa = leitura("Digite a placa do veículo");
+                frota.removerVeiculo(placa);
+            }
+            case 4 -> {
+                limparTela();
+                Rota rota = criarRota();
+                String placa = leitura("Digite a placa do veículo");
+                frota.addRota(placa, rota);
             }
         }
     }
 
-    public static int menuPrincipal() throws FileNotFoundException {
+    public static Rota criarRota() {
+        LocalDate data = informeData();
+        String quilometragem = leitura("Digite a quilometragem da rota");
+        return new Rota(Double.parseDouble(quilometragem), data);
+    }
+
+    public static int menuPrincipal() throws IOException {
         int opcao = -1;
         while (opcao != 0) {
             limparTela();
@@ -173,7 +191,7 @@ public class App {
         return 0;
     }
 
-    public static void main(String[] args) throws FileNotFoundException {
+    public static void main(String[] args) throws IOException {
         sc = new Scanner(System.in);
 
         String nomeArq = "menuFreeFire";
