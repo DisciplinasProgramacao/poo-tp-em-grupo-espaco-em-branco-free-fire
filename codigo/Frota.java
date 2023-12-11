@@ -51,6 +51,16 @@ public class Frota {
         return veiculos.remove(placa);
     }
 
+    public boolean addRota(String placa, Rota rota) {
+        Veiculo veiculoEncontrado = localizarVeiculo(placa);
+
+        if( veiculoEncontrado !=null) 
+            return veiculoEncontrado.addRota(rota);
+        
+
+        return false; //throws?
+    }
+
 
 
     /***
@@ -154,7 +164,17 @@ public class Frota {
         Veiculo veiculoEncontrado = localizarVeiculo(placa);
 
         if( veiculoEncontrado !=null)
-            return localizarVeiculo(placa).relatorioRotas();
+            return "CAAAAAAADE OO RELATORIO DE DESPESASSSSSSSSSSSSSSSS"    ;
+                // TODO: Relatorio de despesas
+
+        return null; //throws?
+    }
+
+    public String relatorioRotasDeVeiculo(String placa) {
+        Veiculo veiculoEncontrado = localizarVeiculo(placa);
+
+        if( veiculoEncontrado !=null)
+            return veiculoEncontrado.relatorioRotas();
 
         return null; //throws?
     }
