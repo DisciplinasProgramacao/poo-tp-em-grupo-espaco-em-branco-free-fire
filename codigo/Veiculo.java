@@ -15,10 +15,12 @@ public class Veiculo {
     private LinkedList<Manutencao> manutencoes = new LinkedList<>();
     private double despesa;
 
-    Veiculo(String placa, ETipoVeiculo tipoVeiculo, EtipoCombustivel combustivelDoVeiculo) {
+    Veiculo(String placa, String tipoVeiculo, String combustivelDoVeiculo) {
         this.placa = placa;
-        this.tipoVeiculo = tipoVeiculo;
-        this.tanqueDoVeiculo = new Tanque(tipoVeiculo, combustivelDoVeiculo);
+        this.tipoVeiculo = ETipoVeiculo.valueOf(tipoVeiculo.toUpperCase());
+        this.tanqueDoVeiculo = new Tanque(this.tipoVeiculo,
+                EtipoCombustivel.valueOf(combustivelDoVeiculo.toUpperCase())
+        );
         this.mapaDeRotas = new HashMap<>();
         this.despesa = 0;
     }
