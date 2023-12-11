@@ -1,43 +1,35 @@
 package codigo;
 
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.Map;
 
 public class Manutencao {
+    private final int id;
+    private LocalDate data;
+    private EtipoManutencao tipo;
+    private double valor;
 
-    private Map<EtipoManutencao, Double> manutencoesRealizadas;
-    
-    /**
-     * Construtor Manutencao que recebe o tipo e a data em que a manutencao foi realizada, decidindo o valor com base no tipo de serviço feito.
-     * @param tipo Tipo de manuntencao feita, atualmente pode ser "Preventiva" ou "Troca de pecas"
-     * @param data Data da manutenção
-     */
-    public Manutencao() {
-        manutencoesRealizadas = new HashMap<>();
-    }
-
+    private static int idCount = 0;
 
     /**
-     * Função tipo double que retorna o valor da manutencao;
-     * @return
+     * Construtor da classe Manutencao que recebe como parâmetro a data e o tipo de manutenção.
+     * @param data
+     * @param tipo
      */
-    public void aplica() {
-
-    }
-
-    public boolean verifica(double kmTotal, double kmRota) {
-        //seila 
-        return false;
+    public Manutencao(LocalDate data, String tipo) {
+        this.id = idCount++;
+        this.data = data;
+        this.tipo = EtipoManutencao.valueOf(tipo.toUpperCase());
+        this.valor = 0;
     }
 
     /**
-     * Função tipo double que permite adicionar o valor da manutencao;
-     * @return valor atualizado da manutenção.
+     * Função  que permite adicionar o valor da manutencao.
      */
-    public double addValorManutencao(LocalDate date, double valor) {
-        //seila
-        return valor;
+    public void addValorManutencao(double valor) {
+        this.valor = valor;
     }
 
+    public int getId() {
+        return id;
+    }
 }
