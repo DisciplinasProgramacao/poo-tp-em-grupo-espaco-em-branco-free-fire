@@ -144,10 +144,12 @@ public class Frota {
         return null; //throws?
     }
 
-    public double combustivelTotalConsumido() { //qual dos dois?
-        return veiculos.values().stream()
+    public String combustivelTotalConsumido() { //qual dos dois?
+        double combustivelTotal = veiculos.values().stream()
                        .mapToDouble(Veiculo::getTotalReabastecido)
                        .sum();
+        
+        return "O combustivel consumido por todos veículos da frota é "+combustivelTotal+"L";
     }
 
 
@@ -177,6 +179,16 @@ public class Frota {
             return veiculoEncontrado.relatorioRotas();
 
         return null; //throws?
+    }
+
+    public boolean addValorManutencao(String placa, double valor) {
+        Veiculo veiculoEncontrado = localizarVeiculo(placa);
+
+        if(veiculoEncontrado.addValorManutencao(valor)) {
+            return true;
+        }
+
+        return false;
     }
 
 }
