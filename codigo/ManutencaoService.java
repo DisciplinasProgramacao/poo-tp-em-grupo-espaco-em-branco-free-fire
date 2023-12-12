@@ -74,4 +74,13 @@ public class ManutencaoService {
         }
     }
 
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder("Lista de manutenções: \n");
+        for (Manutencao manutencao : manutencoes) {
+            sb.append(manutencao).append("\n");
+        }
+        return sb.toString();
+    }
+
 }

@@ -123,6 +123,11 @@ public class App {
                 response = frota.relatorioRotasDeVeiculo(informeVeiculo());
                 System.out.println(response);
             }
+            case 10 -> {
+                limparTela();
+                response = frota.relatorioManutencoesDeVeiculo(informeVeiculo());
+                System.out.println(response);
+            }
         }
     }
 
