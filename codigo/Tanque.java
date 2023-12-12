@@ -17,6 +17,18 @@ public class Tanque {
         this.combustivel = combustivel;
     }
 
+    public boolean autonomiaParaRota(double kmRota) {
+        double autonomiaAtual = autonomiaAtual(); // quantos kms o veiculo ainda roda
+        return kmRota <= autonomiaAtual;
+    }
+
+    public double litrosParaAbastecer(double kmRota) { // quantos litros são necessários para fazer a rota
+        double consumo = combustivel.getConsumo();
+        double litroNecessario = kmRota / consumo;
+        double litroFaltante = litroNecessario - capacidadeAtual;
+        return litroFaltante;
+    }
+
     /**
      * Abastece o tanque com a quantidade de litros especificada pelo usuário. Caso
      * a quantidade abastecida ultrapasse a capacidade máxima, será retornado o
@@ -26,13 +38,9 @@ public class Tanque {
      * @return A capacidade atual do tanque após o abastecimento.
      */
     public double abastecer(double litros) {
-        if (litros > 0) {
-            double capacidadeRestante = capacidadeMaxima - capacidadeAtual;
-            double litrosAbastecidos = Math.min(litros, capacidadeRestante); // Esse método retorna o menor valor a ser
-                                                                             // abastecido
-            capacidadeAtual += litrosAbastecidos;
-        }
-        return capacidadeAtual;
+        capacidadeAtual += litros;
+        return litros * combustivel.getPreco();
+
     }
 
     /**
@@ -42,9 +50,7 @@ public class Tanque {
      * @return A capacidade atual do tanque após o consumo.
      */
     public double consumirCombustivel(double litros) {
-        if (litros > 0) {
-            capacidadeAtual = Math.max(capacidadeAtual - litros, 0);
-        }
+        capacidadeAtual -= litros;
         return capacidadeAtual;
     }
 
