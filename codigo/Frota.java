@@ -181,14 +181,13 @@ public class Frota {
         return null; //throws?
     }
 
-    public boolean addValorManutencao(String placa, double valor) {
+    public void addValorManutencao(String placa, int idManutencao, double valor) {
         Veiculo veiculoEncontrado = localizarVeiculo(placa);
 
-        if(veiculoEncontrado.addValorManutencao(valor)) {
-            return true;
+        if(veiculoEncontrado !=null) {
+            veiculoEncontrado.addValorManutencao(idManutencao, valor);
         }
 
-        return false;
     }
 
 }

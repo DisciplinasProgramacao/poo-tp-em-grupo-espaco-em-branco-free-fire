@@ -32,4 +32,9 @@ public class Manutencao {
     public int getId() {
         return id;
     }
+
+    @Override
+    public String toString(){
+        return "ID: " + id + " Data: " + data + " Tipo: " + tipo + " Valor: " + valor;
+    }
 }

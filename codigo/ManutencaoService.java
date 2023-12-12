@@ -12,7 +12,9 @@ public class ManutencaoService {
     private int multiplicadorManutencoesTrocaPeca;
 
     /**
-     * Construtor da classe ManutencaoService que recebe como parâmetro a quilometragem da manutenção preventiva e da troca de peça.
+     * Construtor da classe ManutencaoService que recebe como parâmetro a
+     * quilometragem da manutenção preventiva e da troca de peça.
+     * 
      * @param kmManutencaoPreventiva
      * @param kmManutencaoTrocaPeca
      */
@@ -25,9 +27,11 @@ public class ManutencaoService {
     }
 
     /**
-     * Função que verifica a necessidade de realizar manutenção. Caso necessário, adiciona uma manutenção na lista de manutenções.
+     * Função que verifica a necessidade de realizar manutenção. Caso necessário,
+     * adiciona uma manutenção na lista de manutenções.
+     * 
      * @param kmTotal quilometragem total do veículo
-     * @param kmRota quilometragem da rota a ser realizada
+     * @param kmRota  quilometragem da rota a ser realizada
      */
     public void verifica(double kmTotal, double kmRota) {
         double kmTotalAposRota = kmTotal + kmRota;
@@ -48,6 +52,7 @@ public class ManutencaoService {
 
     /**
      * Função que adiciona a manutenção na lista de manutenções.
+     * 
      * @param tipo da manutenção
      */
     private void aplicarManutencao(String tipo) {
@@ -55,11 +60,13 @@ public class ManutencaoService {
     }
 
     /**
-     * Função que adiciona um valor de manutenção, aguarda o ID da manutenção, e o valor.
-     * @param id da manutenção
+     * Função que adiciona um valor de manutenção, aguarda o ID da manutenção, e o
+     * valor.
+     * 
+     * @param id    da manutenção
      * @param valor da manutenção
      */
-    private void addValorManutencao(int id, double valor) {
+    public void addValorManutencao(int id, double valor) {
         for (Manutencao manutencao : manutencoes) {
             if (manutencao.getId() == id) {
                 manutencao.addValorManutencao(valor);
@@ -67,5 +74,13 @@ public class ManutencaoService {
         }
     }
 
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder("Lista de manutenções: \n");
+        for (Manutencao manutencao : manutencoes) {
+            sb.append(manutencao).append("\n");
+        }
+        return sb.toString();
+    }
 
 }
