@@ -12,21 +12,21 @@ public class Veiculo {
     private Tanque tanqueDoVeiculo;
     private double totalReabastecido;
     private ETipoVeiculo tipoVeiculo;
-    private LinkedList<Manutencao> manutencoes = new LinkedList<>();
+    private ManutencaoService manutencaoService;
     private double despesa;
 
-    Veiculo(String placa, String tipoVeiculo, String combustivelDoVeiculo) {
+    Veiculo(String placa, ETipoVeiculo tipoVeiculo, EtipoCombustivel combustivelDoVeiculo) {
         this.placa = placa;
-        this.tipoVeiculo = ETipoVeiculo.valueOf(tipoVeiculo.toUpperCase());
-        this.tanqueDoVeiculo = new Tanque(this.tipoVeiculo,
-                EtipoCombustivel.valueOf(combustivelDoVeiculo.toUpperCase())
-        );
+        this.tipoVeiculo = tipoVeiculo;
+        this.tanqueDoVeiculo = new Tanque(this.tipoVeiculo, combustivelDoVeiculo);
         this.mapaDeRotas = new HashMap<>();
         this.despesa = 0;
+        this.manutencaoService = new ManutencaoService(tipoVeiculo.getManuPreventiva(),
+                tipoVeiculo.getManuTrocaDePeca());
     }
 
     public boolean addRota(Rota rota) {
-        if (autonomiaMaxima() >= rota.getQuilometragem()) {
+        if (tanqueDoVeiculo.autonomiaMaxima() >= rota.getQuilometragem()) {
             if (verificarCapacidadeDeRota(rota.getData())) {
                 mapaDeRotas.put(rota.getData(), rota);
                 percorrerRota(rota);
@@ -37,20 +37,13 @@ public class Veiculo {
         return false;
     }
 
-    private double autonomiaMaxima() {
-        return tanqueDoVeiculo.autonomiaMaxima();
-    }
-
-    private double autonomiaAtual() {
-        return tanqueDoVeiculo.autonomiaAtual();
-    }
-
     public double abastecer(double litros) {
         return tanqueDoVeiculo.abastecer(litros);
     }
 
     public double kmNoMes(LocalDate dataConsulta) {
-        double somaDosKmNoMes = mapaDeRotas.entrySet().stream()
+        double somaDosKmNoMes = 0;
+        somaDosKmNoMes = mapaDeRotas.entrySet().stream()
                 .filter(e -> e.getKey().getMonth() == dataConsulta.getMonth()
                         && e.getKey().getYear() == dataConsulta.getYear())
                 .mapToDouble(e -> e.getValue().getQuilometragem())
@@ -59,47 +52,24 @@ public class Veiculo {
     }
 
     public double kmTotal() {
-        double somaDosKmTotal = mapaDeRotas.entrySet().stream()
+        double somaDosKmTotal = 0;
+        somaDosKmTotal = mapaDeRotas.entrySet().stream()
                 .mapToDouble(e -> e.getValue().getQuilometragem())
                 .sum();
         return somaDosKmTotal;
     }
 
     private void percorrerRota(Rota rota) {
-        if (verificarManutencaoPreventiva(rota.getQuilometragem()))
-            manutencoes.add(new Manutencao(EtipoManutencao.PREVENTIVA, rota.getData()));
+        manutencaoService.verifica(kmTotal(), rota.getQuilometragem());
 
-        if (verificarManutencaoPorPeca(rota.getQuilometragem()))
-            manutencoes.add(new Manutencao(EtipoManutencao.TROCAPECA, rota.getData()));
-
-        if (autonomiaAtual() < rota.getQuilometragem() / tanqueDoVeiculo.getConsumo()) {
-            abastecer(tanqueDoVeiculo.autonomiaMaxima() - tanqueDoVeiculo.autonomiaAtual());
-            totalReabastecido += (tanqueDoVeiculo.autonomiaMaxima() - tanqueDoVeiculo.autonomiaAtual());
+        if (!tanqueDoVeiculo.autonomiaParaRota(rota.getQuilometragem())) {
+            double abastecer = tanqueDoVeiculo.litrosParaAbastecer(rota.getQuilometragem());
+            totalReabastecido += abastecer;
+            double valorDoAbastecimento = tanqueDoVeiculo.abastecer(abastecer);
+            addDespesa(valorDoAbastecimento);
         }
 
         tanqueDoVeiculo.consumirCombustivel(rota.getQuilometragem() / tanqueDoVeiculo.getConsumo());
-    }
-
-    public boolean verificarManutencaoPreventiva(double quilometragemDaRota) {
-        int count = (int) IntStream.range(0, manutencoes.size())
-                .filter(e -> e % 2 == 0)
-                .count();
-        if (kmTotal() + quilometragemDaRota >= tipoVeiculo.getManuPreventiva()
-                * Math.max(count, 1))
-            return false;
-
-        return true;
-    }
-
-    public boolean verificarManutencaoPorPeca(double quilometragemDaRota) {
-        int count = (int) IntStream.range(0, manutencoes.size())
-                .filter(e -> e % 2 != 0)
-                .count();
-        if (kmTotal() + quilometragemDaRota > tipoVeiculo.getManuTrocaDePeca()
-                * Math.max(count, 1))
-            return false;
-
-        return true;
     }
 
     public boolean verificarCapacidadeDeRota(LocalDate dataDaRota) {
@@ -110,14 +80,22 @@ public class Veiculo {
 
         if (cont < MAX_ROTAS)
             return true;
-
-        return false;
+        else
+            return false;
     }
 
     public double despesasDoVeiculo() {
+        return despesa;
 
-        return 0.0;
+    }
 
+    private void addDespesa(double valor) {
+        despesa += despesa;
+    }
+
+    public void addValorManutencao(int id, double valor) {
+        addDespesa(valor);
+        manutencaoService.addValorManutencao(id, valor);
     }
 
     public String relatorioRotas() {
