@@ -124,7 +124,6 @@ public class App {
                 System.out.println(response);
             }
         }
-        return 0;
     }
 
     public static LocalDate informeData() {
@@ -136,7 +135,7 @@ public class App {
         return leitura("Digite a placa do veículo");
     }
 
-    public static void menuGestao(int opcao) {
+    public static void menuGestao(int opcao) throws IOException {
         limparTela();
         switch (opcao) {
             case 1 -> {
@@ -146,7 +145,15 @@ public class App {
             }
             case 2 -> {
                 limparTela();
-                // TODO: Implementar
+                String arquivo = leitura("Digite o nome do arquivo");
+                Scanner leitor = new Scanner(new File(arquivo), StandardCharsets.UTF_8);
+                while (leitor.hasNextLine()) {
+                    String linha = leitor.nextLine();
+                    String[] dados = linha.split(";");
+                    Veiculo veiculo = new Veiculo(dados[0], dados[1], dados[2]);
+                    frota.addVeiculo(veiculo.getPlaca(), veiculo);
+                }
+                leitor.close();
             }
             case 3 -> {
                 limparTela();
