@@ -104,7 +104,7 @@ public class Veiculo {
 
     public String relatorioRotas() {
         StringBuilder sb = new StringBuilder();
-        sb.append("\tRelatorio do " + ETipoVeiculo.values() + " de placa: " + placa + "\n");
+        sb.append("\tRelatorio do " + tipoVeiculo + " de placa: " + placa + "\n");
         sb.append("Lista de rotas executadas pelo veiculo\n");
         mapaDeRotas.entrySet().stream()
                 .sorted(Map.Entry.comparingByKey())
