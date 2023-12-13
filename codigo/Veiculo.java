@@ -74,7 +74,7 @@ public class Veiculo {
             addDespesa(valorDoAbastecimento);
         }
 
-        tanqueDoVeiculo.consumirCombustivel(rota.getQuilometragem() / tanqueDoVeiculo.getConsumo());
+        tanqueDoVeiculo.consumirCombustivel(rota.getQuilometragem());
     }
 
     public boolean verificarCapacidadeDeRota(LocalDate dataDaRota) {
@@ -118,6 +118,11 @@ public class Veiculo {
         sb.append("Lista de manutenções realizadas no veículo de placa").append(placa).append("\n");
         sb.append(manutencaoService);
         return sb.toString();
+    }
+
+    public String toString() {
+        return tipoVeiculo + " Placa: " + this.placa + " | Km total: " + kmTotal();
+
     }
 
     public int getMAX_ROTAS() {
