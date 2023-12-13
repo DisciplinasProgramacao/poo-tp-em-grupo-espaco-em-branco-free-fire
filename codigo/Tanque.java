@@ -17,11 +17,24 @@ public class Tanque {
         this.combustivel = combustivel;
     }
 
+    /**
+     * Verifica se o veículo é capaz de fazer uma rota com base na quantidade de
+     * litros no tanque.
+     *
+     * @param kmRota O km de rota que o veículo irá receber.
+     * @return quantidade de litros faltantes para fazer a rota.
+     */
     public boolean autonomiaParaRota(double kmRota) {
         double autonomiaAtual = autonomiaAtual(); // quantos kms o veiculo ainda roda
         return kmRota <= autonomiaAtual;
     }
 
+    /**
+     * Calcula quantidade de litros será necessário abastecer para completar a rota
+     *
+     * @param kmRota O km de rota que o veículo irá receber.
+     * @return quantidade de litros faltantes para fazer a rota.
+     */
     public double litrosParaAbastecer(double kmRota) { // quantos litros são necessários para fazer a rota
         double consumo = combustivel.getConsumo();
         double litroNecessario = kmRota / consumo;
@@ -46,11 +59,11 @@ public class Tanque {
     /**
      * Consome a quantidade de litros com base no consumo por quilômetro rodado.
      *
-     * @param litros A quantidade de litros a ser consumida.
+     * @param kmRota O km que será percorrido.
      * @return A capacidade atual do tanque após o consumo.
      */
-    public double consumirCombustivel(double litros) {
-        capacidadeAtual -= litros;
+    public double consumirCombustivel(double kmRota) {
+        double capacidadeAtual = kmRota-getConsumo();
         return capacidadeAtual;
     }
 
