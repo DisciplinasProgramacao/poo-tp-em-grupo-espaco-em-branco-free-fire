@@ -12,7 +12,7 @@ public class Tanque {
      * @param combustivel   O tipo de combustível que o tanque armazena.
      */
     Tanque(ETipoVeiculo tamanhoTanque, EtipoCombustivel combustivel) {
-        this.capacidadeMaxima = tamanhoTanque.getTamanhoTanque(); // Obtendo a capacidade máxima do tipo de veículo
+        this.capacidadeMaxima = tamanhoTanque.getTamanhoTanque();// Obtendo a capacidade máxima do tipo de veículo
         this.capacidadeAtual = capacidadeMaxima;
         this.combustivel = combustivel;
     }
@@ -36,10 +36,10 @@ public class Tanque {
      * @return quantidade de litros faltantes para fazer a rota.
      */
     public double litrosParaAbastecer(double kmRota) { // quantos litros são necessários para fazer a rota
-        double consumo = combustivel.getConsumo();
-        double litroNecessario = kmRota / consumo;
-        double litroFaltante = litroNecessario - capacidadeAtual;
-        return litroFaltante;
+        double consumo = combustivel.getConsumo(); // 10 litros por km
+        double litroNecessario = kmRota / consumo; // 20 litros necessarios por rota
+        double litroFaltante = capacidadeAtual - litroNecessario; // 1 rota sobra 30, 2 rota sobra 10
+        return Math.abs(litroFaltante);
     }
 
     /**
@@ -51,9 +51,8 @@ public class Tanque {
      * @return A capacidade atual do tanque após o abastecimento.
      */
     public double abastecerParaRota(double litros) {
-        capacidadeAtual += litros;
+        capacidadeAtual = litros;
         return litros * combustivel.getPreco();
-
     }
 
     /**
@@ -62,9 +61,9 @@ public class Tanque {
      * @param kmRota O km que será percorrido.
      * @return A capacidade atual do tanque após o consumo.
      */
-    public double consumirCombustivel(double kmRota) {
-        double capacidadeAtual = kmRota-getConsumo();
-        return capacidadeAtual;
+    public void consumirCombustivel(double kmRota) {
+        capacidadeAtual -= kmRota / getConsumo();
+        
     }
 
     /**
@@ -80,6 +79,7 @@ public class Tanque {
     /**
      * Calcula a autonomia atual do tanque com base no consumo por quilômetro
      * rodado.
+     * 
      * @return A autonomia atual do tanque em quilômetros.
      */
     public double autonomiaAtual() {
