@@ -1,10 +1,12 @@
 package codigo;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Scanner;
 
 public class App {
@@ -14,22 +16,33 @@ public class App {
     static Frota frota = new Frota();
     static Scanner sc;
 
-    public static int menu(String nomeArquivo) throws IOException {
-        limparTela();
-        File arqMenu = new File(nomeArquivo);
-        Scanner leitor = new Scanner(arqMenu, StandardCharsets.UTF_8);
-        System.out.println(leitor.nextLine());
-        System.out.println("==========================");
-        int contador = 1;
-        while (leitor.hasNextLine()) {
-            System.out.println(contador + " - " + leitor.nextLine());
-            contador++;
+    public static int menu(String nomeArquivo) {
+        try {
+            limparTela();
+            File arqMenu = new File(nomeArquivo);
+            Scanner leitor = new Scanner(arqMenu, StandardCharsets.UTF_8);
+            System.out.println(leitor.nextLine());
+            System.out.println("==========================");
+            int contador = 1;
+            while (leitor.hasNextLine()) {
+                System.out.println(contador + " - " + leitor.nextLine());
+                contador++;
+            }
+            System.out.println("0 - Sair");
+            System.out.print("\nSua opção: ");
+            int opcao = Integer.parseInt(sc.nextLine());
+            leitor.close();
+            return opcao;
+        } catch (FileNotFoundException e) {
+            System.out.println("Erro ao abrir o arquivo: " + nomeArquivo);
+            return -1;
+        } catch (IOException e) {
+            System.out.println("Erro de leitura: " + e.getMessage());
+            return -1;
+        } catch (NumberFormatException e) {
+            System.out.println("Entrada inválida. Por favor, digite um número.");
+            return -1;
         }
-        System.out.println("0 - Sair");
-        System.out.print("\nSua opção: ");
-        int opcao = Integer.parseInt(sc.nextLine());
-        leitor.close();
-        return opcao;
     }
 
     /**
@@ -61,12 +74,30 @@ public class App {
     }
 
     public static Veiculo criarVeiculo() {
-        String placa = leitura("Digite a placa do veículo");
-        String tipoVeiculo = leitura("Digite o tipo do veículo (CARRO, VAN, FURGAO, CAMINHAO)");
-        String tipoCombustivel = leitura("Digite o tipo de combustível do veículo (ALCOOL, GASOLINA, DIESEL)");
+        String placa;
+        do {
+            placa = leitura("Digite a placa do veículo (formato AAA-0000): ");
+            if (!placa.matches("[A-Z]{3}-\\d{4}"))
+                System.out.println("Placa em formato inválido.");
+        } while (!placa.matches("[A-Z]{3}-\\d{4}"));
+
+        String tipoVeiculo;
+        do {
+            tipoVeiculo = leitura("Digite o tipo do veículo (CARRO, VAN, FURGAO, CAMINHAO): ");
+            if (!tipoVeiculo.matches("(?i)(CARRO|VAN|FURGAO|CAMINHAO)"))
+                System.out.println("Tipo de veículo inválido.");
+        } while (!tipoVeiculo.matches("(?i)(CARRO|VAN|FURGAO|CAMINHAO)"));
+
+        String tipoCombustivel;
+        do {
+            tipoCombustivel = leitura("Digite o tipo de combustível do veículo (ALCOOL, GASOLINA, DIESEL): ");
+            if (!tipoCombustivel.matches("(?i)(ALCOOL|GASOLINA|DIESEL)"))
+                System.out.println("Tipo de combustível inválido.");
+        } while (!tipoCombustivel.matches("(?i)(ALCOOL|GASOLINA|DIESEL)"));
 
         return new Veiculo(placa, tipoVeiculo, tipoCombustivel);
     }
+
 
     public static String[] lerLinhaDeArquivo(Scanner leitor) {
         String linha = leitor.nextLine();
@@ -131,9 +162,19 @@ public class App {
     }
 
     public static LocalDate informeData() {
-        String data = leitura("Informe uma data (dd/mm/aaaa)");
-        return LocalDate.parse(data, DATE_TIME_FORMATTER);
+        LocalDate data = null;
+        do {
+            String dataInput = leitura("Informe uma data (dd/MM/yyyy): ");
+            try {
+                data = LocalDate.parse(dataInput, DATE_TIME_FORMATTER);
+            } catch (DateTimeParseException e) {
+                System.out.println("Formato de data inválido. Por favor, digite uma data válida.");
+            }
+        } while (data == null);
+
+        return data;
     }
+
 
     public static String informeVeiculo() {
         return leitura("Digite a placa do veículo");
@@ -143,56 +184,78 @@ public class App {
         return leitura("Digite o nome do arquivo");
     }
 
-    public static void menuGestao(int opcao) throws IOException {
-        limparTela();
-        switch (opcao) {
-            case 1 -> {
-                limparTela();
-                Veiculo veiculo = criarVeiculo();
-                frota.addVeiculo(veiculo.getPlaca(), veiculo);
-            }
-            case 2 -> {
-                limparTela();
-                String arquivo = informeArquivo();
-                Scanner leitor = new Scanner(new File(arquivo), StandardCharsets.UTF_8);
-                while (leitor.hasNextLine()) {
-                    String[] dados = lerLinhaDeArquivo(leitor);
-                    Veiculo veiculo = new Veiculo(dados[0], dados[1], dados[2]);
+    public static void menuGestao(int opcao) {
+        try {
+            limparTela();
+            switch (opcao) {
+                case 1 -> {
+                    limparTela();
+                    Veiculo veiculo = criarVeiculo();
                     frota.addVeiculo(veiculo.getPlaca(), veiculo);
                 }
-                leitor.close();
-            }
-            case 3 -> {
-                limparTela();
-                frota.removerVeiculo(informeVeiculo());
-            }
-            case 4 -> {
-                limparTela();
-                Rota rota = criarRota();
-                frota.addRota(informeVeiculo(), rota);
-            }
-            case 5 -> {
-                limparTela();
-                String placa = informeVeiculo();
-                String arquivo = informeArquivo();
-                Scanner leitor = new Scanner(new File(arquivo), StandardCharsets.UTF_8);
-                while (leitor.hasNextLine()) {
-                    String[] dados = lerLinhaDeArquivo(leitor);
-                    Rota rota = new Rota(Double.parseDouble(dados[0]), LocalDate.parse(dados[1], DATE_TIME_FORMATTER));
-                    frota.addRota(placa, rota);
+                case 2 -> {
+                    limparTela();
+                    String arquivo = informeArquivo();
+                    Scanner leitor = new Scanner(new File(arquivo), StandardCharsets.UTF_8);
+                    while (leitor.hasNextLine()) {
+                        String[] dados = lerLinhaDeArquivo(leitor);
+                        Veiculo veiculo = new Veiculo(dados[0], dados[1], dados[2]);
+                        frota.addVeiculo(veiculo.getPlaca(), veiculo);
+                    }
+                    leitor.close();
                 }
-                leitor.close();
+                case 3 -> {
+                    limparTela();
+                    frota.removerVeiculo(informeVeiculo());
+                }
+                case 4 -> {
+                    limparTela();
+                    Rota rota = criarRota();
+                    frota.addRota(informeVeiculo(), rota);
+                }
+                case 5 -> {
+                    limparTela();
+                    String placa = informeVeiculo();
+                    String arquivo = informeArquivo();
+                    Scanner leitor = new Scanner(new File(arquivo), StandardCharsets.UTF_8);
+                    while (leitor.hasNextLine()) {
+                        String[] dados = lerLinhaDeArquivo(leitor);
+                        Rota rota = new Rota(Double.parseDouble(dados[0]), LocalDate.parse(dados[1], DATE_TIME_FORMATTER));
+                        frota.addRota(placa, rota);
+                    }
+                    leitor.close();
+                }
             }
+        } catch (FileNotFoundException e) {
+            System.out.println("Erro ao abrir o arquivo.");
+        } catch (IOException e) {
+            System.out.println("Erro de leitura do arquivo.");
+        } catch (NumberFormatException e) {
+            System.out.println("Formato inválido no arquivo.");
         }
     }
 
     public static Rota criarRota() {
         LocalDate data = informeData();
-        String quilometragem = leitura("Digite a quilometragem da rota");
-        return new Rota(Double.parseDouble(quilometragem), data);
+
+        double quilometragem;
+        do {
+            String input = leitura("Digite a quilometragem da rota: ");
+            try {
+                quilometragem = Double.parseDouble(input);
+                if (quilometragem < 0) {
+                    System.out.println("A quilometragem deve ser um valor não negativo.");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Entrada inválida. Por favor, digite um número válido.");
+                quilometragem = -1;
+            }
+        } while (quilometragem < 0);
+
+        return new Rota(quilometragem, data);
     }
 
-    public static int menuPrincipal() throws IOException {
+    public static int menuPrincipal() {
         int opcao = -1;
         while (opcao != 0) {
             limparTela();
@@ -215,26 +278,31 @@ public class App {
         return 0;
     }
 
-    public static void main(String[] args) throws IOException {
-        // A soma dos valores de quilometragem do arquivo rotas deve ser 6,297.35
-        sc = new Scanner(System.in);
+    public static void main(String[] args) {
+        try {
+            sc = new Scanner(System.in);
 
-        String nomeArq = "menuFreeFire";
-        int opcao = -1;
+            String nomeArq = "menuFreeFire";
+            int opcao = -1;
 
-        while (opcao != 0) {
-            limparTela();
-            opcao = menu(nomeArq);
-            switch (opcao) {
-                case 1 -> {
-                    limparTela();
-                    opcao = menuPrincipal();
+            while (opcao != 0) {
+                limparTela();
+                opcao = menu(nomeArq);
+                switch (opcao) {
+                    case 1 -> {
+                        limparTela();
+                        opcao = menuPrincipal();
+                    }
+                    case 0 -> System.out.println("Saindo...");
                 }
-                case 0 -> System.out.println("Saindo...");
+                System.out.println("Free Fire agradece a preferência!");
             }
-            System.out.println("Free Fire agradece a preferência!");
+        } catch (Exception e) {
+            System.out.println("Ocorreu um erro inesperado: " + e.getMessage());
+        } finally {
+            if (sc != null) {
+                sc.close();
+            }
         }
-        sc.close();
     }
-
 }
