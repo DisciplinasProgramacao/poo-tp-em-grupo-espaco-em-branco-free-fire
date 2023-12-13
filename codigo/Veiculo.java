@@ -46,6 +46,14 @@ public class Veiculo {
         return false;
     }
 
+    /**
+     * Calcula a soma total de quilometragem percorrida no mês especificado com base
+     * nas rotas registradas no mapa de rotas.
+     *
+     * @param dataConsulta A data do mês para o qual deseja-se calcular a
+     *                     quilometragem.
+     * @return A soma total de quilometragem percorrida no mês especificado.
+     */
     public double kmNoMes(LocalDate dataConsulta) {
         double somaDosKmNoMes = 0;
         somaDosKmNoMes = mapaDeRotas.entrySet().stream()
@@ -56,6 +64,12 @@ public class Veiculo {
         return somaDosKmNoMes;
     }
 
+    /**
+     * Calcula a soma total de quilometragem percorrida com base em todas as rotas
+     * registradas no mapa de rotas.
+     *
+     * @return A soma total de quilometragem percorrida em todas as rotas.
+     */
     public double kmTotal() {
         double somaDosKmTotal = 0;
         somaDosKmTotal = mapaDeRotas.entrySet().stream()
@@ -64,10 +78,20 @@ public class Veiculo {
         return somaDosKmTotal;
     }
 
+    /**
+     * Executa as operações necessárias para percorrer uma rota, incluindo a
+     * verificação
+     * de manutenção com base na quilometragem total, abastecimento do tanque do
+     * veículo
+     * se necessário, e a atualização do consumo de combustível.
+     *
+     * @param rota A instância de Rota a ser percorrida.
+     */
+
     private void percorrerRota(Rota rota) {
         manutencaoService.verifica(kmTotal(), rota.getQuilometragem());
 
-        if (tanqueDoVeiculo.autonomiaParaRota(rota.getQuilometragem())) {
+        if (!tanqueDoVeiculo.autonomiaParaRota(rota.getQuilometragem())) {
             double abastecer = tanqueDoVeiculo.litrosParaAbastecer(rota.getQuilometragem());
             totalReabastecido += abastecer;
             double valorDoAbastecimento = tanqueDoVeiculo.abastecerParaRota(abastecer);
@@ -76,6 +100,15 @@ public class Veiculo {
 
         tanqueDoVeiculo.consumirCombustivel(rota.getQuilometragem());
     }
+
+    /**
+     * Verifica se ainda há capacidade disponível para adicionar rotas em um
+     * determinado mês
+     * com base no número máximo permitido de rotas (MAX_ROTAS).
+     *
+     * @param dataDaRota A data da rota para a qual a capacidade será verificada.
+     * @return true se houver capacidade disponível, false caso contrário.
+     */
 
     public boolean verificarCapacidadeDeRota(LocalDate dataDaRota) {
         int cont = (int) mapaDeRotas.entrySet().stream()
@@ -89,19 +122,45 @@ public class Veiculo {
             return false;
     }
 
+    /**
+     * Retorna o total de despesas associadas ao veículo.
+     *
+     * @return O valor total das despesas do veículo.
+     */
     public double despesasDoVeiculo() {
         return despesa;
     }
 
+    /**
+     * Adiciona um valor específico ao total de despesas associadas ao veículo.
+     *
+     * @param valor O valor a ser adicionado às despesas do veículo.
+     */
     private void addDespesa(double valor) {
         despesa += valor;
     }
 
+    /**
+     * Adiciona um valor específico às despesas totais do veículo e repassa a
+     * informação
+     * ao serviço de manutenção associado, identificado pelo ID.
+     *
+     * @param id    O identificador único do serviço de manutenção.
+     * @param valor O valor a ser adicionado às despesas do veículo e ao serviço de
+     *              manutenção.
+     */
     public void addValorManutencao(int id, double valor) {
         addDespesa(valor);
         manutencaoService.addValorManutencao(id, valor);
     }
 
+    /**
+     * Gera um relatório das rotas executadas pelo veículo, incluindo informações
+     * sobre o tipo
+     * do veículo, placa e a lista de rotas ordenadas por data.
+     *
+     * @return Uma string contendo o relatório das rotas do veículo.
+     */
     public String relatorioRotas() {
         StringBuilder sb = new StringBuilder();
         sb.append("\tRelatorio do " + tipoVeiculo + " de placa: " + placa + "\n");
@@ -114,6 +173,13 @@ public class Veiculo {
         return sb.toString();
     }
 
+    /**
+     * Gera um relatório das manutenções realizadas no veículo, incluindo
+     * informações sobre a placa
+     * do veículo e detalhes fornecidos pelo serviço de manutenção associado.
+     *
+     * @return Uma string contendo o relatório das manutenções do veículo.
+     */
     public String relatorioManutencoes() {
         StringBuilder sb = new StringBuilder();
         sb.append("Lista de manutenções realizadas no veículo de placa").append(placa).append("\n");
