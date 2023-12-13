@@ -7,7 +7,11 @@ import java.util.*;
 public class Veiculo {
     private final int MAX_ROTAS = 30;
     private String placa;
-    private Map<LocalDate, Rota> mapaDeRotas; //TODO: Deveria ser Rotas[] - pq se ele pode fazer 30 por mes, daria pra usar vetor. Além do mais, a verificação não precisaria contar quantas já foram na lista, apenas puxaria o array referente a data e verificaria o tamanho do array
+    private Map<LocalDate, Rota> mapaDeRotas; // TODO: Deveria ser Rotas[] - pq se ele pode fazer 30 por mes, daria
+                                              // pra
+                                              // usar vetor. Além do mais, a verificação não precisaria contar quantas
+                                              // já foram na lista, apenas puxaria o array referente a data e
+                                              // verificaria o tamanho do array
     private int quantRotas;
     private Tanque tanqueDoVeiculo;
     private double totalReabastecido;
@@ -15,14 +19,15 @@ public class Veiculo {
     private ManutencaoService manutencaoService;
     private double despesa;
 
-    Veiculo(String placa, ETipoVeiculo tipoVeiculo, EtipoCombustivel combustivelDoVeiculo) {
+    Veiculo(String placa, String tipoVeiculo, String combustivelDoVeiculo) {
         this.placa = placa;
-        this.tipoVeiculo = tipoVeiculo;
-        this.tanqueDoVeiculo = new Tanque(this.tipoVeiculo, combustivelDoVeiculo);
+        this.tipoVeiculo = ETipoVeiculo.valueOf(tipoVeiculo.toUpperCase());
+        this.tanqueDoVeiculo = new Tanque(this.tipoVeiculo,
+                EtipoCombustivel.valueOf(combustivelDoVeiculo.toUpperCase()));
         this.mapaDeRotas = new HashMap<>();
         this.despesa = 0;
-        this.manutencaoService = new ManutencaoService(tipoVeiculo.getManuPreventiva(),
-                tipoVeiculo.getManuTrocaDePeca());
+        this.manutencaoService = new ManutencaoService(this.tipoVeiculo.getManuPreventiva(),
+                this.tipoVeiculo.getManuTrocaDePeca());
     }
 
     public boolean addRota(Rota rota) {
@@ -108,6 +113,13 @@ public class Veiculo {
         return sb.toString();
     }
 
+    public String relatorioManutencoes() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Lista de manutenções realizadas no veículo de placa").append(placa).append("\n");
+        sb.append(manutencaoService);
+        return sb.toString();
+    }
+
     public int getMAX_ROTAS() {
         return MAX_ROTAS;
     }
@@ -130,12 +142,5 @@ public class Veiculo {
 
     public double getTotalReabastecido() {
         return totalReabastecido;
-    }
-
-    public String relatorioManutencoes() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Lista de manutenções realizadas no veículo de placa").append(placa).append("\n");
-        sb.append(manutencaoService);
-        return sb.toString();
     }
 }
