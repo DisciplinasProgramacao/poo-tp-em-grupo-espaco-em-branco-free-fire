@@ -7,11 +7,7 @@ import java.util.*;
 public class Veiculo {
     private final int MAX_ROTAS = 30;
     private String placa;
-    private Map<LocalDate, Rota> mapaDeRotas; // TODO: Deveria ser Rotas[] - pq se ele pode fazer 30 por mes, daria
-                                              // pra
-                                              // usar vetor. Além do mais, a verificação não precisaria contar quantas
-                                              // já foram na lista, apenas puxaria o array referente a data e
-                                              // verificaria o tamanho do array
+    private Map<LocalDate, Rota> mapaDeRotas;
     private int quantRotas;
     private Tanque tanqueDoVeiculo;
     private double totalReabastecido;
@@ -26,6 +22,7 @@ public class Veiculo {
                 EtipoCombustivel.valueOf(combustivelDoVeiculo.toUpperCase()));
         this.mapaDeRotas = new HashMap<>();
         this.despesa = 0;
+        this.totalReabastecido = 0;
         this.manutencaoService = new ManutencaoService(this.tipoVeiculo.getManuPreventiva(),
                 this.tipoVeiculo.getManuTrocaDePeca());
     }
