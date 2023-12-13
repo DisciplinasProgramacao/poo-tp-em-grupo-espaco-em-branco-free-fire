@@ -108,6 +108,7 @@ public class Veiculo {
         sb.append("Lista de rotas executadas pelo veiculo\n");
         mapaDeRotas.entrySet().stream()
                 .sorted(Map.Entry.comparingByKey())
+                .map(e -> e.getValue())
                 .forEach(e -> sb.append(e.toString() + "\n"));
 
         return sb.toString();
