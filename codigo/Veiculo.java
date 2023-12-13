@@ -27,6 +27,13 @@ public class Veiculo {
                 this.tipoVeiculo.getManuTrocaDePeca());
     }
 
+    /**
+     * Adiciona uma rota ao mapa de rotas se o veículo tiver autonomia suficiente
+     * e a capacidade de rota para a data da rota estiver disponível.
+     * 
+     * @param rota A instância de Rota a ser adicionada ao mapa de rotas.
+     * @return true se a rota foi adicionada com sucesso, false caso contrário.
+     */
     public boolean addRota(Rota rota) {
         if (tanqueDoVeiculo.autonomiaMaxima() >= rota.getQuilometragem()) {
             if (verificarCapacidadeDeRota(rota.getData())) {
@@ -37,10 +44,6 @@ public class Veiculo {
         }
 
         return false;
-    }
-
-    public double abastecerParaRota(double litros) {
-        return tanqueDoVeiculo.abastecerParaRota(litros);
     }
 
     public double kmNoMes(LocalDate dataConsulta) {
@@ -64,7 +67,7 @@ public class Veiculo {
     private void percorrerRota(Rota rota) {
         manutencaoService.verifica(kmTotal(), rota.getQuilometragem());
 
-        if (!tanqueDoVeiculo.autonomiaParaRota(rota.getQuilometragem())) {
+        if (tanqueDoVeiculo.autonomiaParaRota(rota.getQuilometragem())) {
             double abastecer = tanqueDoVeiculo.litrosParaAbastecer(rota.getQuilometragem());
             totalReabastecido += abastecer;
             double valorDoAbastecimento = tanqueDoVeiculo.abastecerParaRota(abastecer);
@@ -91,7 +94,7 @@ public class Veiculo {
     }
 
     private void addDespesa(double valor) {
-        despesa += despesa;
+        despesa += valor;
     }
 
     public void addValorManutencao(int id, double valor) {
