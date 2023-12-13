@@ -68,6 +68,11 @@ public class App {
         return new Veiculo(placa, tipoVeiculo, tipoCombustivel);
     }
 
+    public static String[] lerLinhaDeArquivo(Scanner leitor) {
+        String linha = leitor.nextLine();
+        return linha.split(";");
+    }
+
     public static void menuRelatorio(int opcao) {
         limparTela();
         String response;
@@ -76,37 +81,31 @@ public class App {
                 limparTela();
                 response = frota.relatorioFrota();
                 System.out.println(response);
-                pausa();
             }
             case 2 -> {
                 limparTela();
                 response = String.valueOf(frota.quilometragemTotal());
                 System.out.println(response);
-                pausa();
             }
             case 3 -> {
                 limparTela();
                 response = String.valueOf(frota.maiorKMTotal());
                 System.out.println(response);
-                pausa();
             }
             case 4 -> {
                 limparTela();
                 response = String.valueOf(frota.maiorKMMedia());
                 System.out.println(response);
-                pausa();
             }
             case 5 -> {
                 limparTela();
                 response = frota.combustivelConsumido(informeVeiculo());
                 System.out.println(response);
-                pausa();
             }
             case 6 -> {
                 limparTela();
                 response = frota.quilometragemDeVeiculoNoMes(informeData(), informeVeiculo());
                 System.out.println(response);
-                pausa();
             }
             case 7 -> {
                 limparTela();
@@ -140,6 +139,10 @@ public class App {
         return leitura("Digite a placa do veículo");
     }
 
+    public static String informeArquivo() {
+        return leitura("Digite o nome do arquivo");
+    }
+
     public static void menuGestao(int opcao) throws IOException {
         limparTela();
         switch (opcao) {
@@ -150,11 +153,10 @@ public class App {
             }
             case 2 -> {
                 limparTela();
-                String arquivo = leitura("Digite o nome do arquivo");
+                String arquivo = informeArquivo();
                 Scanner leitor = new Scanner(new File(arquivo), StandardCharsets.UTF_8);
                 while (leitor.hasNextLine()) {
-                    String linha = leitor.nextLine();
-                    String[] dados = linha.split(";");
+                    String[] dados = lerLinhaDeArquivo(leitor);
                     Veiculo veiculo = new Veiculo(dados[0], dados[1], dados[2]);
                     frota.addVeiculo(veiculo.getPlaca(), veiculo);
                 }
@@ -162,14 +164,24 @@ public class App {
             }
             case 3 -> {
                 limparTela();
-                String placa = leitura("Digite a placa do veículo");
-                frota.removerVeiculo(placa);
+                frota.removerVeiculo(informeVeiculo());
             }
             case 4 -> {
                 limparTela();
                 Rota rota = criarRota();
-                String placa = leitura("Digite a placa do veículo");
-                frota.addRota(placa, rota);
+                frota.addRota(informeVeiculo(), rota);
+            }
+            case 5 -> {
+                limparTela();
+                String placa = informeVeiculo();
+                String arquivo = informeArquivo();
+                Scanner leitor = new Scanner(new File(arquivo), StandardCharsets.UTF_8);
+                while (leitor.hasNextLine()) {
+                    String[] dados = lerLinhaDeArquivo(leitor);
+                    Rota rota = new Rota(Double.parseDouble(dados[0]), LocalDate.parse(dados[1], DATE_TIME_FORMATTER));
+                    frota.addRota(placa, rota);
+                }
+                leitor.close();
             }
         }
     }
@@ -204,6 +216,7 @@ public class App {
     }
 
     public static void main(String[] args) throws IOException {
+        // A soma dos valores de quilometragem do arquivo rotas deve ser 6,297.35
         sc = new Scanner(System.in);
 
         String nomeArq = "menuFreeFire";
