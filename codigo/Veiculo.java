@@ -7,7 +7,7 @@ import java.util.*;
 public class Veiculo {
     private final int MAX_ROTAS = 30;
     private String placa;
-    private Map<LocalDate, Rota> mapaDeRotas;
+    private Map<LocalDate, Rota> mapaDeRotas; //TODO: Deveria ser Rotas[] - pq se ele pode fazer 30 por mes, daria pra usar vetor. Além do mais, a verificação não precisaria contar quantas já foram na lista, apenas puxaria o array referente a data e verificaria o tamanho do array
     private int quantRotas;
     private Tanque tanqueDoVeiculo;
     private double totalReabastecido;
@@ -37,8 +37,8 @@ public class Veiculo {
         return false;
     }
 
-    public double abastecer(double litros) {
-        return tanqueDoVeiculo.abastecer(litros);
+    public double abastecerParaRota(double litros) {
+        return tanqueDoVeiculo.abastecerParaRota(litros);
     }
 
     public double kmNoMes(LocalDate dataConsulta) {
@@ -65,7 +65,7 @@ public class Veiculo {
         if (!tanqueDoVeiculo.autonomiaParaRota(rota.getQuilometragem())) {
             double abastecer = tanqueDoVeiculo.litrosParaAbastecer(rota.getQuilometragem());
             totalReabastecido += abastecer;
-            double valorDoAbastecimento = tanqueDoVeiculo.abastecer(abastecer);
+            double valorDoAbastecimento = tanqueDoVeiculo.abastecerParaRota(abastecer);
             addDespesa(valorDoAbastecimento);
         }
 
@@ -86,7 +86,6 @@ public class Veiculo {
 
     public double despesasDoVeiculo() {
         return despesa;
-
     }
 
     private void addDespesa(double valor) {
@@ -133,4 +132,10 @@ public class Veiculo {
         return totalReabastecido;
     }
 
+    public String relatorioManutencoes() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Lista de manutenções realizadas no veículo de placa").append(placa).append("\n");
+        sb.append(manutencaoService);
+        return sb.toString();
+    }
 }

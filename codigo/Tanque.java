@@ -37,7 +37,7 @@ public class Tanque {
      * @param litros A quantidade de litros a ser abastecida.
      * @return A capacidade atual do tanque após o abastecimento.
      */
-    public double abastecer(double litros) {
+    public double abastecerParaRota(double litros) {
         capacidadeAtual += litros;
         return litros * combustivel.getPreco();
 
@@ -67,7 +67,6 @@ public class Tanque {
     /**
      * Calcula a autonomia atual do tanque com base no consumo por quilômetro
      * rodado.
-     *
      * @return A autonomia atual do tanque em quilômetros.
      */
     public double autonomiaAtual() {

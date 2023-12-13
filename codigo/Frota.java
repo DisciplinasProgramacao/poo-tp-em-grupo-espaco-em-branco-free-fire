@@ -166,11 +166,20 @@ public class Frota {
         Veiculo veiculoEncontrado = localizarVeiculo(placa);
 
         if( veiculoEncontrado !=null)
-            return "CAAAAAAADE OO RELATORIO DE DESPESASSSSSSSSSSSSSSSS"    ;
-                // TODO: Relatorio de despesas
+            return "Veículo de placa:"+placa+"\nTotal gasto em despesas: "+veiculoEncontrado.despesasDoVeiculo();
 
         return null; //throws?
     }
+
+    public String relatorioManutencoesDeVeiculo(String placa) {
+        Veiculo veiculoEncontrado = localizarVeiculo(placa);
+
+        if( veiculoEncontrado !=null)
+            return veiculoEncontrado.relatorioManutencoes();
+
+        return null; //throws?
+    }
+
 
     public String relatorioRotasDeVeiculo(String placa) {
         Veiculo veiculoEncontrado = localizarVeiculo(placa);
