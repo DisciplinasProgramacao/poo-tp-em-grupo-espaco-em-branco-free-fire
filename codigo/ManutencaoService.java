@@ -67,10 +67,17 @@ public class ManutencaoService {
      * @param valor da manutenção
      */
     public void addValorManutencao(int id, double valor) {
+        boolean manutencaoEncontrada = false;
+
         for (Manutencao manutencao : manutencoes) {
             if (manutencao.getId() == id) {
                 manutencao.addValorManutencao(valor);
+                manutencaoEncontrada = true;
             }
+        }
+
+        if (!manutencaoEncontrada) {
+            throw new IllegalArgumentException("ID de manutenção inválido");
         }
     }
 
