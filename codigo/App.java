@@ -7,6 +7,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 public class App {
@@ -182,64 +183,68 @@ public class App {
      * @param opcao Opção escolhida pelo usuário.
      */
     public static int menuRelatorio(int opcao) {
-        limparTela();
-        String response;
-        switch (opcao) {
-            case 1 -> {
-                limparTela();
-                response = frota.relatorioFrota();
-                System.out.println(response);
+        try {
+            limparTela();
+            String response;
+            switch (opcao) {
+                case 1 -> {
+                    limparTela();
+                    response = frota.relatorioFrota();
+                    System.out.println(response);
+                }
+                case 2 -> {
+                    limparTela();
+                    response = String.valueOf(frota.quilometragemTotal());
+                    System.out.println(response);
+                }
+                case 3 -> {
+                    limparTela();
+                    response = String.valueOf(frota.maiorKMTotal());
+                    System.out.println(response);
+                }
+                case 4 -> {
+                    limparTela();
+                    response = String.valueOf(frota.maiorKMMedia());
+                    System.out.println(response);
+                }
+                case 5 -> {
+                    limparTela();
+                    response = frota.combustivelConsumido(informeVeiculo());
+                    System.out.println(response);
+                }
+                case 6 -> {
+                    limparTela();
+                    response = frota.quilometragemDeVeiculoNoMes(informeData(), informeVeiculo());
+                    System.out.println(response);
+                }
+                case 7 -> {
+                    limparTela();
+                    response = frota.quilometragemTotalDeVeiculo(informeVeiculo());
+                    System.out.println(response);
+                }
+                case 8 -> {
+                    limparTela();
+                    response = frota.relatorioDespesasDeVeiculo(informeVeiculo());
+                    System.out.println(response);
+                }
+                case 9 -> {
+                    limparTela();
+                    response = frota.relatorioRotasDeVeiculo(informeVeiculo());
+                    System.out.println(response);
+                }
+                case 10 -> {
+                    limparTela();
+                    response = frota.relatorioManutencoesDeVeiculo(informeVeiculo());
+                    System.out.println(response);
+                }
+                case 11 -> menuPrincipal();
+                case 0 -> {
+                    return 0;
+                }
+                default -> System.out.println("Opção inválida.");
             }
-            case 2 -> {
-                limparTela();
-                response = String.valueOf(frota.quilometragemTotal());
-                System.out.println(response);
-            }
-            case 3 -> {
-                limparTela();
-                response = String.valueOf(frota.maiorKMTotal());
-                System.out.println(response);
-            }
-            case 4 -> {
-                limparTela();
-                response = String.valueOf(frota.maiorKMMedia());
-                System.out.println(response);
-            }
-            case 5 -> {
-                limparTela();
-                response = frota.combustivelConsumido(informeVeiculo());
-                System.out.println(response);
-            }
-            case 6 -> {
-                limparTela();
-                response = frota.quilometragemDeVeiculoNoMes(informeData(), informeVeiculo());
-                System.out.println(response);
-            }
-            case 7 -> {
-                limparTela();
-                response = frota.quilometragemTotalDeVeiculo(informeVeiculo());
-                System.out.println(response);
-            }
-            case 8 -> {
-                limparTela();
-                response = frota.relatorioDespesasDeVeiculo(informeVeiculo());
-                System.out.println(response);
-            }
-            case 9 -> {
-                limparTela();
-                response = frota.relatorioRotasDeVeiculo(informeVeiculo());
-                System.out.println(response);
-            }
-            case 10 -> {
-                limparTela();
-                response = frota.relatorioManutencoesDeVeiculo(informeVeiculo());
-                System.out.println(response);
-            }
-            case 11 -> menuPrincipal();
-            case 0 -> {
-                return 0;
-            }
-            default -> System.out.println("Opção inválida.");
+        } catch (NoSuchElementException e) {
+            System.out.println(e.getMessage());
         }
         return -1;
     }
@@ -302,6 +307,8 @@ public class App {
             System.out.println("Erro de leitura do arquivo.");
         } catch (NumberFormatException e) {
             System.out.println("Formato inválido no arquivo.");
+        } catch (IllegalArgumentException | NoSuchElementException e) {
+            System.out.println(e.getMessage());
         }
         return -1;
     }
