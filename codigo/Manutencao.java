@@ -1,6 +1,7 @@
 package codigo;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 public class Manutencao {
     private final int id;
@@ -35,6 +36,7 @@ public class Manutencao {
 
     @Override
     public String toString(){
-        return "ID: " + id + " Data: " + data + " Tipo: " + tipo + " Valor: " + valor;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        return "ID: " + id + " Data: " + data.format(formatter) + " Tipo: " + tipo + " Valor: " + valor;
     }
 }

@@ -76,7 +76,7 @@ public class ManutencaoService {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder("Lista de manutenções: \n");
+        StringBuilder sb = new StringBuilder();
         for (Manutencao manutencao : manutencoes) {
             sb.append(manutencao).append("\n");
         }
