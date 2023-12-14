@@ -97,10 +97,9 @@ public class Frota {
      */ 
     public String maiorKMMedia() {
         Veiculo veiculoMaiorKMMedia = veiculos.values().stream()
-                                    .max((v1, v2) -> {
-                                        return Double.compare(v1.kmTotal() / v1.getQuantRotas(), v2.kmTotal() / v2.getQuantRotas());
-                                    })
-                                    .orElse(null);
+                                .max(Comparator.comparingDouble(v -> v.kmTotal() / v.getQuantRotas()))
+                                .orElse(null);
+
         if(veiculoMaiorKMMedia!=null) 
             return veiculoMaiorKMMedia.toString();
         
@@ -222,7 +221,7 @@ public class Frota {
     public String relatorioFrota() {
         StringBuilder relatorio = new StringBuilder("\n🔫Frota FreeFire☠️");
         relatorio.append("\nTamanho: "+tamanhoFrota);
-        relatorio.append("\nLista de veiculos:");
+        relatorio.append("\nLista de veiculos:\n");
 
         veiculos.values().stream()
                          .forEach(v -> relatorio.append("\n"+v.toString()));
