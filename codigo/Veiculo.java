@@ -23,6 +23,7 @@ public class Veiculo {
         this.mapaDeRotas = new HashMap<>();
         this.despesa = 0;
         this.totalReabastecido = 0;
+        this.quantRotas = 0;
         this.manutencaoService = new ManutencaoService(this.tipoVeiculo.getManuPreventiva(),
                 this.tipoVeiculo.getManuTrocaDePeca());
     }
@@ -38,6 +39,7 @@ public class Veiculo {
         if (tanqueDoVeiculo.autonomiaMaxima() >= rota.getQuilometragem()) {
             if (verificarCapacidadeDeRota(rota.getData())) {
                 mapaDeRotas.put(rota.getData(), rota);
+                quantRotas++;
                 percorrerRota(rota);
                 return true;
             }
@@ -163,7 +165,7 @@ public class Veiculo {
      */
     public String relatorioRotas() {
         StringBuilder sb = new StringBuilder();
-        sb.append("\tRelatorio do " + tipoVeiculo + " de placa: " + placa + "\n");
+        sb.append("\tRelatorio: " + tipoVeiculo.name().toLowerCase() + " placa: " + placa + "\n");
         sb.append("Lista de rotas executadas pelo veiculo\n");
         mapaDeRotas.entrySet().stream()
                 .sorted(Map.Entry.comparingByKey())
@@ -182,13 +184,13 @@ public class Veiculo {
      */
     public String relatorioManutencoes() {
         StringBuilder sb = new StringBuilder();
-        sb.append("Lista de manutenções realizadas no veículo de placa").append(placa).append("\n");
+        sb.append("Lista de manutenções realizadas no veículo de placa: ").append(placa).append("\n");
         sb.append(manutencaoService);
         return sb.toString();
     }
 
     public String toString() {
-        return tipoVeiculo + " Placa: " + this.placa + " | Km total: " + kmTotal();
+        return tipoVeiculo + " Placa: " + this.placa + "\nKm total: " + kmTotal();
 
     }
 
