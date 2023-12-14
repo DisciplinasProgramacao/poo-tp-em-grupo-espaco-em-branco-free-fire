@@ -24,10 +24,15 @@ public class Manutencao {
     }
 
     /**
-     * Função  que permite adicionar o valor da manutencao.
+     * Função que permite adicionar o valor da manutencao.
      */
-    public void addValorManutencao(double valor) {
-        this.valor = valor;
+    public boolean addValorManutencao(double valor) {
+        if (this.valor != 0)
+            return false;
+        else {
+            this.valor = valor;
+            return true;
+        }
     }
 
     public int getId() {

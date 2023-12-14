@@ -157,7 +157,7 @@ public class App {
             if (!placa.matches("[A-Z]{3}-\\d{4}"))
                 System.out.println("Placa em formato inválido.");
         } while (!placa.matches("[A-Z]{3}-\\d{4}"));
-        return placa;
+        return placa.toUpperCase();
     }
 
     public static String informeTipoVeiculo() {
