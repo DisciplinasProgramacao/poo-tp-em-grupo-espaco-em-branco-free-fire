@@ -274,16 +274,22 @@ public class App {
                     }
                     leitor.close();
                 }
-                case 3 ->  {
+                case 3 -> {
+                    String id = leitura("Digite o ID da manutenção");
+                    String valor = leitura("Digite o valor da manutenção");
+                    String veiculo = informeVeiculo();
+                    frota.addValorManutencao(veiculo, Integer.parseInt(id), Double.parseDouble(valor));
+                }
+                case 4 ->  {
                     response = frota.removerVeiculo(informeVeiculo());
                     System.out.println(response);
                 }
-                case 4 -> {
+                case 5 -> {
                     Rota rota = criarRota();
                     response = frota.addRota(informeVeiculo(), rota);
                     System.out.println(response);
                 }
-                case 5 -> {
+                case 6 -> {
                     String placa = informeVeiculo();
                     String arquivo = informeArquivo();
                     Scanner leitor = new Scanner(new File(arquivo), StandardCharsets.UTF_8);
@@ -295,7 +301,7 @@ public class App {
                     }
                     leitor.close();
                 }
-                case 6 -> menuPrincipal();
+                case 7 -> menuPrincipal();
                 case 0 -> {
                     return 0;
                 }
