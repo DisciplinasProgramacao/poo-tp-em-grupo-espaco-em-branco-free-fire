@@ -84,30 +84,14 @@ public class App {
      * @return Veículo criado.
      */
     public static Veiculo criarVeiculo() {
-        String placa;
-        do {
-            placa = leitura("Digite a placa do veículo (formato AAA-0000): ");
-            if (!placa.matches("[A-Z]{3}-\\d{4}"))
-                System.out.println("Placa em formato inválido.");
-        } while (!placa.matches("[A-Z]{3}-\\d{4}"));
+        String placa = informeVeiculo();
 
-        String tipoVeiculo;
-        do {
-            tipoVeiculo = leitura("Digite o tipo do veículo (CARRO, VAN, FURGAO, CAMINHAO): ");
-            if (!tipoVeiculo.matches("(?i)(CARRO|VAN|FURGAO|CAMINHAO)"))
-                System.out.println("Tipo de veículo inválido.");
-        } while (!tipoVeiculo.matches("(?i)(CARRO|VAN|FURGAO|CAMINHAO)"));
+        String tipoVeiculo = informeTipoVeiculo();
 
-        String tipoCombustivel;
-        do {
-            tipoCombustivel = leitura("Digite o tipo de combustível do veículo (ALCOOL, GASOLINA, DIESEL): ");
-            if (!tipoCombustivel.matches("(?i)(ALCOOL|GASOLINA|DIESEL)"))
-                System.out.println("Tipo de combustível inválido.");
-        } while (!tipoCombustivel.matches("(?i)(ALCOOL|GASOLINA|DIESEL)"));
+        String tipoCombustivel = informeCombustivel();
 
         return new Veiculo(placa, tipoVeiculo, tipoCombustivel);
     }
-
 
     /**
      * Encapsula a ação de criar uma rota, lendo os dados do usuário e validando-os.
@@ -118,7 +102,7 @@ public class App {
 
         double quilometragem;
         do {
-            String input = leitura("Digite a quilometragem da rota: ");
+            String input = leitura("Digite a quilometragem da rota");
             try {
                 quilometragem = Double.parseDouble(input);
                 if (quilometragem < 0) {
@@ -150,7 +134,7 @@ public class App {
     public static LocalDate informeData() {
         LocalDate data = null;
         do {
-            String dataInput = leitura("Informe uma data (dd/MM/yyyy): ");
+            String dataInput = leitura("Informe uma data (dd/MM/yyyy)");
             try {
                 data = LocalDate.parse(dataInput, DATE_TIME_FORMATTER);
             } catch (DateTimeParseException e) {
@@ -167,7 +151,33 @@ public class App {
      * @return Placa do veículo.
      */
     public static String informeVeiculo() {
-        return leitura("Digite a placa do veículo");
+        String placa;
+        do {
+            placa = leitura("Digite a placa do veículo (formato AAA-0000)");
+            if (!placa.matches("[A-Z]{3}-\\d{4}"))
+                System.out.println("Placa em formato inválido.");
+        } while (!placa.matches("[A-Z]{3}-\\d{4}"));
+        return placa;
+    }
+
+    public static String informeTipoVeiculo() {
+        String tipoVeiculo;
+        do {
+            tipoVeiculo = leitura("Digite o tipo do veículo (CARRO, VAN, FURGAO, CAMINHAO)");
+            if (!tipoVeiculo.matches("(?i)(CARRO|VAN|FURGAO|CAMINHAO)"))
+                System.out.println("Tipo de veículo inválido.");
+        } while (!tipoVeiculo.matches("(?i)(CARRO|VAN|FURGAO|CAMINHAO)"));
+        return tipoVeiculo;
+    }
+
+    public static String informeCombustivel() {
+        String tipoCombustivel;
+        do {
+            tipoCombustivel = leitura("Digite o tipo de combustível do veículo (ALCOOL, GASOLINA, DIESEL)");
+            if (!tipoCombustivel.matches("(?i)(ALCOOL|GASOLINA|DIESEL)"))
+                System.out.println("Tipo de combustível inválido.");
+        } while (!tipoCombustivel.matches("(?i)(ALCOOL|GASOLINA|DIESEL)"));
+        return tipoCombustivel;
     }
 
     /**
