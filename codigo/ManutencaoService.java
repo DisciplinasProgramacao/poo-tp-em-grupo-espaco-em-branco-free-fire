@@ -10,6 +10,7 @@ public class ManutencaoService {
     private List<Manutencao> manutencoes;
     private int multiplicadorManutencoesPreventiva;
     private int multiplicadorManutencoesTrocaPeca;
+    private double despesaTotal;
 
     /**
      * Construtor da classe ManutencaoService que recebe como parâmetro a
@@ -24,6 +25,7 @@ public class ManutencaoService {
         manutencoes = new LinkedList<>();
         multiplicadorManutencoesPreventiva = 1;
         multiplicadorManutencoesTrocaPeca = 1;
+        despesaTotal = 0;
     }
 
     /**
@@ -69,7 +71,8 @@ public class ManutencaoService {
 
         for (Manutencao manutencao : manutencoes) {
             if (manutencao.getId() == id) {
-                manutencao.addValorManutencao(valor);
+                if (manutencao.addValorManutencao(valor))
+                    despesaTotal += valor;
                 manutencaoEncontrada = true;
             }
         }
@@ -77,6 +80,10 @@ public class ManutencaoService {
         if (!manutencaoEncontrada) {
             throw new IllegalArgumentException("ID de manutenção inválido");
         }
+    }
+
+    public double getDespesaTotal() {
+        return despesaTotal;
     }
 
     @Override
