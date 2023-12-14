@@ -15,8 +15,8 @@ public class ManutencaoService {
      * Construtor da classe ManutencaoService que recebe como parâmetro a
      * quilometragem da manutenção preventiva e da troca de peça.
      * 
-     * @param kmManutencaoPreventiva
-     * @param kmManutencaoTrocaPeca
+     * @param kmManutencaoPreventiva valor constante de quando deve ser realizada a manutenção preventiva
+     * @param kmManutencaoTrocaPeca valor constante de quando deve ser realizada a manutenção de troca de peça
      */
     public ManutencaoService(int kmManutencaoPreventiva, int kmManutencaoTrocaPeca) {
         this.VALOR_KM_MANUTENCAO_PREVENTIVA = kmManutencaoPreventiva;
@@ -52,7 +52,6 @@ public class ManutencaoService {
 
     /**
      * Função que adiciona a manutenção na lista de manutenções.
-     * 
      * @param tipo da manutenção
      */
     private void aplicarManutencao(String tipo) {
@@ -62,8 +61,7 @@ public class ManutencaoService {
     /**
      * Função que adiciona um valor de manutenção, aguarda o ID da manutenção, e o
      * valor.
-     * 
-     * @param id    da manutenção
+     * @param id da manutenção
      * @param valor da manutenção
      */
     public void addValorManutencao(int id, double valor) {
