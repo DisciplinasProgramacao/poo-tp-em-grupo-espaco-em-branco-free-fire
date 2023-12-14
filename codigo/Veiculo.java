@@ -13,7 +13,6 @@ public class Veiculo {
     private double totalReabastecido;
     private ETipoVeiculo tipoVeiculo;
     private ManutencaoService manutencaoService;
-    private double despesa;
 
     Veiculo(String placa, String tipoVeiculo, String combustivelDoVeiculo) {
         this.placa = placa;
@@ -21,7 +20,6 @@ public class Veiculo {
         this.tanqueDoVeiculo = new Tanque(this.tipoVeiculo,
                 EtipoCombustivel.valueOf(combustivelDoVeiculo.toUpperCase()));
         this.mapaDeRotas = new HashMap<>();
-        this.despesa = 0;
         this.totalReabastecido = 0;
         this.quantRotas = 0;
         this.manutencaoService = new ManutencaoService(this.tipoVeiculo.getManuPreventiva(),
@@ -91,13 +89,13 @@ public class Veiculo {
      */
 
     private void percorrerRota(Rota rota) {
-        manutencaoService.verifica(kmTotal(), rota.getQuilometragem());
+        manutencaoService.verifica(kmTotal());
 
         if (!tanqueDoVeiculo.autonomiaParaRota(rota.getQuilometragem())) {
             double abastecer = tanqueDoVeiculo.litrosParaAbastecer(rota.getQuilometragem());
             totalReabastecido += abastecer;
-            double valorDoAbastecimento = tanqueDoVeiculo.abastecerParaRota(abastecer);
-            addDespesa(valorDoAbastecimento);
+            tanqueDoVeiculo.abastecerParaRota(abastecer);
+
         }
 
         tanqueDoVeiculo.consumirCombustivel(rota.getQuilometragem());
@@ -129,8 +127,16 @@ public class Veiculo {
      *
      * @return O valor total das despesas do veículo.
      */
-    public double despesasDoVeiculo() {
-        return despesa;
+    public String despesasDoVeiculo() {
+        StringBuilder sb = new StringBuilder();
+        double totalDespesa = 0;
+        totalDespesa = tanqueDoVeiculo.getDespesasDoTanque() + manutencaoService.getDespesaTotal();
+        sb.append("Gastos do veiculo: de placa: ").append(placa).append("\n");
+        sb.append("Despesas com combustivel: ").append(tanqueDoVeiculo.getDespesasDoTanque()).append("\n");
+        sb.append("Despesa com manutenções: ").append(manutencaoService.getDespesaTotal()).append("\n");
+        sb.append("Total: ").append(totalDespesa);
+        return sb.toString();
+
     }
 
     /**
@@ -138,9 +144,6 @@ public class Veiculo {
      *
      * @param valor O valor a ser adicionado às despesas do veículo.
      */
-    private void addDespesa(double valor) {
-        despesa += valor;
-    }
 
     /**
      * Adiciona um valor específico às despesas totais do veículo e repassa a
@@ -152,7 +155,7 @@ public class Veiculo {
      *              manutenção.
      */
     public void addValorManutencao(int id, double valor) {
-        addDespesa(valor);
+
         manutencaoService.addValorManutencao(id, valor);
     }
 

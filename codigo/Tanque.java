@@ -4,6 +4,7 @@ public class Tanque {
     private double capacidadeMaxima;
     private double capacidadeAtual;
     private EtipoCombustivel combustivel;
+    private double despesasDoTanque;
 
     /**
      * Construtor do tanque de combustível.
@@ -15,6 +16,7 @@ public class Tanque {
         this.capacidadeMaxima = tamanhoTanque.getTamanhoTanque(); // Obtendo a capacidade máxima do tipo de veículo
         this.capacidadeAtual = capacidadeMaxima;
         this.combustivel = combustivel;
+        this.despesasDoTanque = 0;
     }
 
     /**
@@ -50,9 +52,9 @@ public class Tanque {
      * @param litros A quantidade de litros a ser abastecida.
      * @return o valor gasto no abastecimento.
      */
-    public double abastecerParaRota(double litros) {
+    public void abastecerParaRota(double litros) {
         capacidadeAtual += litros;
-        return litros * combustivel.getPreco();
+        despesasDoTanque += litros * combustivel.getPreco();
     }
 
     /**
@@ -92,5 +94,9 @@ public class Tanque {
      */
     public double getConsumo() {
         return combustivel.getConsumo();
+    }
+
+    public double getDespesasDoTanque() {
+        return despesasDoTanque;
     }
 }
