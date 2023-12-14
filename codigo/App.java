@@ -16,6 +16,11 @@ public class App {
     static Frota frota = new Frota();
     static Scanner sc;
 
+    /**
+     * Exibe um menu de opções para o usuário, lendo as opções de um arquivo de texto.
+     * @param nomeArquivo Nome do arquivo de texto.
+     * @return Opção escolhida pelo usuário.
+     */
     public static int menu(String nomeArquivo) {
         try {
             limparTela();
@@ -73,6 +78,10 @@ public class App {
         sc.nextLine();
     }
 
+    /**
+     * Encapsula a ação de criar um veículo, lendo os dados do usuário e validando-os.
+     * @return Veículo criado.
+     */
     public static Veiculo criarVeiculo() {
         String placa;
         do {
@@ -99,12 +108,80 @@ public class App {
     }
 
 
+    /**
+     * Encapsula a ação de criar uma rota, lendo os dados do usuário e validando-os.
+     * @return Rota criada.
+     */
+    public static Rota criarRota() {
+        LocalDate data = informeData();
+
+        double quilometragem;
+        do {
+            String input = leitura("Digite a quilometragem da rota: ");
+            try {
+                quilometragem = Double.parseDouble(input);
+                if (quilometragem < 0) {
+                    System.out.println("A quilometragem deve ser um valor não negativo.");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Entrada inválida. Por favor, digite um número válido.");
+                quilometragem = -1;
+            }
+        } while (quilometragem < 0);
+
+        return new Rota(quilometragem, data);
+    }
+
+    /**
+     * Encapsula a ação de ler uma linha de um arquivo e retorna um array de strings, separando os campos por ";".
+     * @param leitor Scanner do arquivo.
+     * @return Array de strings com os campos.
+     */
     public static String[] lerLinhaDeArquivo(Scanner leitor) {
         String linha = leitor.nextLine();
         return linha.split(";");
     }
 
-    public static void menuRelatorio(int opcao) {
+    /**
+     * Encapsula a ação de ler uma data do usuário, validando o formato.
+     * @return Objeto LocalDate.
+     */
+    public static LocalDate informeData() {
+        LocalDate data = null;
+        do {
+            String dataInput = leitura("Informe uma data (dd/MM/yyyy): ");
+            try {
+                data = LocalDate.parse(dataInput, DATE_TIME_FORMATTER);
+            } catch (DateTimeParseException e) {
+                System.out.println("Formato de data inválido. Por favor, digite uma data válida.");
+            }
+        } while (data == null);
+
+        return data;
+    }
+
+
+    /**
+     * Encapsula a ação de ler a placa de um veículo do usuário.
+     * @return Placa do veículo.
+     */
+    public static String informeVeiculo() {
+        return leitura("Digite a placa do veículo");
+    }
+
+    /**
+     * Encapsula a ação de ler o nome de um arquivo do usuário.
+     * @return Nome do arquivo.
+     */
+    public static String informeArquivo() {
+        return leitura("Digite o nome do arquivo");
+    }
+
+    /**
+     * Encapsula a ação de exibir o menu de relatórios disponíveis e chama a função correspondente.
+     * @param opcao Opção escolhida pelo usuário.
+     */
+    public static int menuRelatorio(int opcao) {
         limparTela();
         String response;
         switch (opcao) {
@@ -158,73 +235,66 @@ public class App {
                 response = frota.relatorioManutencoesDeVeiculo(informeVeiculo());
                 System.out.println(response);
             }
-        }
-    }
-
-    public static LocalDate informeData() {
-        LocalDate data = null;
-        do {
-            String dataInput = leitura("Informe uma data (dd/MM/yyyy): ");
-            try {
-                data = LocalDate.parse(dataInput, DATE_TIME_FORMATTER);
-            } catch (DateTimeParseException e) {
-                System.out.println("Formato de data inválido. Por favor, digite uma data válida.");
+            case 11 -> menuPrincipal();
+            case 0 -> {
+                return 0;
             }
-        } while (data == null);
-
-        return data;
+            default -> System.out.println("Opção inválida.");
+        }
+        return -1;
     }
 
-
-    public static String informeVeiculo() {
-        return leitura("Digite a placa do veículo");
-    }
-
-    public static String informeArquivo() {
-        return leitura("Digite o nome do arquivo");
-    }
-
-    public static void menuGestao(int opcao) {
+    /**
+     * Exibe o menu de gestão e chama a função escolhida.
+     * @param opcao Opção escolhida pelo usuário.
+     */
+    public static int menuGestao(int opcao) {
+        String response;
         try {
             limparTela();
             switch (opcao) {
                 case 1 -> {
-                    limparTela();
                     Veiculo veiculo = criarVeiculo();
-                    frota.addVeiculo(veiculo.getPlaca(), veiculo);
+                    response = frota.addVeiculo(veiculo.getPlaca(), veiculo);
+                    System.out.println(response);
                 }
                 case 2 -> {
-                    limparTela();
                     String arquivo = informeArquivo();
                     Scanner leitor = new Scanner(new File(arquivo), StandardCharsets.UTF_8);
                     while (leitor.hasNextLine()) {
                         String[] dados = lerLinhaDeArquivo(leitor);
                         Veiculo veiculo = new Veiculo(dados[0], dados[1], dados[2]);
-                        frota.addVeiculo(veiculo.getPlaca(), veiculo);
+                        response = frota.addVeiculo(veiculo.getPlaca(), veiculo);
+                        System.out.println(response);
                     }
                     leitor.close();
                 }
-                case 3 -> {
-                    limparTela();
-                    frota.removerVeiculo(informeVeiculo());
+                case 3 ->  {
+                    response = frota.removerVeiculo(informeVeiculo());
+                    System.out.println(response);
                 }
                 case 4 -> {
-                    limparTela();
                     Rota rota = criarRota();
-                    frota.addRota(informeVeiculo(), rota);
+                    response = frota.addRota(informeVeiculo(), rota);
+                    System.out.println(response);
                 }
                 case 5 -> {
-                    limparTela();
                     String placa = informeVeiculo();
                     String arquivo = informeArquivo();
                     Scanner leitor = new Scanner(new File(arquivo), StandardCharsets.UTF_8);
                     while (leitor.hasNextLine()) {
                         String[] dados = lerLinhaDeArquivo(leitor);
                         Rota rota = new Rota(Double.parseDouble(dados[0]), LocalDate.parse(dados[1], DATE_TIME_FORMATTER));
-                        frota.addRota(placa, rota);
+                        response = frota.addRota(placa, rota);
+                        System.out.println(response);
                     }
                     leitor.close();
                 }
+                case 6 -> menuPrincipal();
+                case 0 -> {
+                    return 0;
+                }
+                default -> System.out.println("Opção inválida.");
             }
         } catch (FileNotFoundException e) {
             System.out.println("Erro ao abrir o arquivo.");
@@ -233,28 +303,12 @@ public class App {
         } catch (NumberFormatException e) {
             System.out.println("Formato inválido no arquivo.");
         }
+        return -1;
     }
 
-    public static Rota criarRota() {
-        LocalDate data = informeData();
-
-        double quilometragem;
-        do {
-            String input = leitura("Digite a quilometragem da rota: ");
-            try {
-                quilometragem = Double.parseDouble(input);
-                if (quilometragem < 0) {
-                    System.out.println("A quilometragem deve ser um valor não negativo.");
-                }
-            } catch (NumberFormatException e) {
-                System.out.println("Entrada inválida. Por favor, digite um número válido.");
-                quilometragem = -1;
-            }
-        } while (quilometragem < 0);
-
-        return new Rota(quilometragem, data);
-    }
-
+    /**
+     * Exibe o menu principal e chama a função escolhida.
+     */
     public static int menuPrincipal() {
         int opcao = -1;
         while (opcao != 0) {
@@ -264,15 +318,17 @@ public class App {
                 case 1 -> {
                     limparTela();
                     opcao = menu("menuGestao");
-                    menuGestao(opcao);
-                    pausa();
+                    opcao = menuGestao(opcao);
                 }
                 case 2 -> {
                     limparTela();
                     opcao = menu("menuRelatorio");
-                    menuRelatorio(opcao);
-                    pausa();
+                    opcao = menuRelatorio(opcao);
                 }
+                case 0 -> {
+                    return 0;
+                }
+                default -> System.out.println("Opção inválida.");
             }
         }
         return 0;
@@ -293,10 +349,13 @@ public class App {
                         limparTela();
                         opcao = menuPrincipal();
                     }
-                    case 0 -> System.out.println("Saindo...");
+                    case 0 -> {
+                    }
+                    default -> System.out.println("Opção inválida.");
                 }
-                System.out.println("Free Fire agradece a preferência!");
             }
+            System.out.println("Saindo...");
+            System.out.println("Free Fire Logística: Trajetos Rápidos, Resultados Explosivos! Booyah!");
         } catch (Exception e) {
             System.out.println("Ocorreu um erro inesperado: " + e.getMessage());
         } finally {
@@ -304,5 +363,6 @@ public class App {
                 sc.close();
             }
         }
+
     }
 }
