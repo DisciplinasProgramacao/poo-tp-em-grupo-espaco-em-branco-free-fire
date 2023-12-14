@@ -46,7 +46,7 @@ public class Frota {
             return "Veiculo de placa: "+placa+" foi adicionado com sucesso.";
         }
 
-        throw new RuntimeException("Não é possível adicionar. A placa já está cadastrada.");
+        throw new IllegalArgumentException("Não é possível adicionar. A placa já está cadastrada.");
     }
 
     /***
