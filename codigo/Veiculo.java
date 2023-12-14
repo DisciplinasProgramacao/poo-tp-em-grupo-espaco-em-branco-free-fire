@@ -190,7 +190,7 @@ public class Veiculo {
     }
 
     public String toString() {
-        return tipoVeiculo + " Placa: " + this.placa + "\nKm total: " + kmTotal();
+        return tipoVeiculo.name().toLowerCase() + " Placa: " + this.placa + " | Km total: " + kmTotal();
 
     }
 
