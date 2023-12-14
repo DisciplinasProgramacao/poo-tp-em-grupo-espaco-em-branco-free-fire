@@ -6,13 +6,13 @@ public class Tanque {
     private EtipoCombustivel combustivel;
 
     /**
-     * Construtor do tanque.
+     * Construtor do tanque de combustível.
      *
      * @param tamanhoTanque O tamanho do tanque em litros.
      * @param combustivel   O tipo de combustível que o tanque armazena.
      */
-    Tanque(ETipoVeiculo tamanhoTanque, EtipoCombustivel combustivel) {
-        this.capacidadeMaxima = tamanhoTanque.getTamanhoTanque();// Obtendo a capacidade máxima do tipo de veículo
+    public Tanque(ETipoVeiculo tamanhoTanque, EtipoCombustivel combustivel) {
+        this.capacidadeMaxima = tamanhoTanque.getTamanhoTanque(); // Obtendo a capacidade máxima do tipo de veículo
         this.capacidadeAtual = capacidadeMaxima;
         this.combustivel = combustivel;
     }
@@ -21,49 +21,48 @@ public class Tanque {
      * Verifica se o veículo é capaz de fazer uma rota com base na quantidade de
      * litros no tanque.
      *
-     * @param kmRota O km de rota que o veículo irá receber.
-     * @return quantidade de litros faltantes para fazer a rota.
+     * @param kmRota A distância da rota que o veículo irá fazer em quilômetros.
+     * @return true se o veículo tiver autonomia para a rota, false caso contrário.
      */
     public boolean autonomiaParaRota(double kmRota) {
-        double autonomiaAtual = autonomiaAtual(); // quantos kms o veiculo ainda roda
-        return kmRota <= autonomiaAtual;
+        double autonomiaAtual = autonomiaAtual();
+        return kmRota <= autonomiaAtual; // Se o cálculo for verdadeiro retorna true
     }
 
     /**
-     * Calcula quantidade de litros será necessário abastecer para completar a rota
+     * Calcula a quantidade de litros necessários para abastecer o veículo e
+     * completar uma rota.
      *
-     * @param kmRota O km de rota que o veículo irá receber.
+     * @param kmRota A distância da rota que o veículo irá fazer em quilômetros.
      * @return quantidade de litros faltantes para fazer a rota.
      */
-    public double litrosParaAbastecer(double kmRota) { // quantos litros são necessários para fazer a rota
-        double consumo = combustivel.getConsumo(); // 10 litros por km
-        double litroNecessario = kmRota / consumo; // 20 litros necessarios por rota
-        double litroFaltante = capacidadeAtual - litroNecessario; // 1 rota sobra 30, 2 rota sobra 10
-        return Math.abs(litroFaltante);
+    public double litrosParaAbastecer(double kmRota) {
+        double consumo = combustivel.getConsumo();
+        double litroNecessario = kmRota / consumo;
+        double litroFaltante = litroNecessario - capacidadeAtual;
+        return Math.abs(litroFaltante); // Retorna o valor absoluto
     }
 
     /**
-     * Abastece o tanque com a quantidade de litros especificada pelo usuário. Caso
-     * a quantidade abastecida ultrapasse a capacidade máxima, será retornado o
-     * quanto foi possível abastecer.
+     * Abastece o tanque com a quantidade de litros necessários para completar a
+     * rota.
      *
      * @param litros A quantidade de litros a ser abastecida.
-     * @return A capacidade atual do tanque após o abastecimento.
+     * @return o valor gasto no abastecimento.
      */
     public double abastecerParaRota(double litros) {
-        capacidadeAtual = litros;
+        capacidadeAtual += litros;
         return litros * combustivel.getPreco();
     }
 
     /**
      * Consome a quantidade de litros com base no consumo por quilômetro rodado.
      *
-     * @param kmRota O km que será percorrido.
+     * @param kmRota O quilômetro que será percorrido.
      * @return A capacidade atual do tanque após o consumo.
      */
     public void consumirCombustivel(double kmRota) {
         capacidadeAtual -= kmRota / getConsumo();
-        
     }
 
     /**
@@ -79,13 +78,18 @@ public class Tanque {
     /**
      * Calcula a autonomia atual do tanque com base no consumo por quilômetro
      * rodado.
-     * 
+     *
      * @return A autonomia atual do tanque em quilômetros.
      */
     public double autonomiaAtual() {
         return capacidadeAtual * combustivel.getConsumo();
     }
 
+    /**
+     * Obtém o consumo de combustível por quilômetro rodado para o veículo.
+     *
+     * @return O consumo de combustível por quilômetro rodado.
+     */
     public double getConsumo() {
         return combustivel.getConsumo();
     }
