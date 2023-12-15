@@ -72,14 +72,6 @@ public class App {
     }
 
     /**
-     * Pausa para leitura de mensagens em console.
-     */
-    static void pausa() {
-        System.out.println("Enter para continuar.");
-        sc.nextLine();
-    }
-
-    /**
      * Encapsula a ação de criar um veículo, lendo os dados do usuário e validando-os.
      * @return Veículo criado.
      */
@@ -154,9 +146,9 @@ public class App {
         String placa;
         do {
             placa = leitura("Digite a placa do veículo (formato AAA-0000)");
-            if (!placa.matches("[A-Z]{3}-\\d{4}"))
+            if (!placa.matches("(?i)[A-Z]{3}-\\d{4}"))
                 System.out.println("Placa em formato inválido.");
-        } while (!placa.matches("[A-Z]{3}-\\d{4}"));
+        } while (!placa.matches("(?i)[A-Z]{3}-\\d{4}"));
         return placa.toUpperCase();
     }
 
@@ -378,7 +370,7 @@ public class App {
                 }
             }
             System.out.println("Saindo...");
-            System.out.println("Free Fire Logística: Trajetos Rápidos, Resultados Explosivos! Booyah!");
+            System.out.println("Valeu pelo semestre professor! tmj =)");
         } catch (Exception e) {
             System.out.println("Ocorreu um erro inesperado: " + e.getMessage());
         } finally {

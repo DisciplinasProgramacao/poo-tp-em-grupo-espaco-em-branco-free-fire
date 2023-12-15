@@ -33,19 +33,17 @@ public class ManutencaoService {
      * adiciona uma manutenção na lista de manutenções.
      * 
      * @param kmTotal quilometragem total do veículo
-     * @param kmRota  quilometragem da rota a ser realizada
      */
-    public void verifica(double kmTotal, double kmRota) {
-        double kmTotalAposRota = kmTotal + kmRota;
+    public void verifica(double kmTotal) {
         int proxPreventiva = multiplicadorManutencoesPreventiva * VALOR_KM_MANUTENCAO_PREVENTIVA;
         int proxTrocaPeca = multiplicadorManutencoesTrocaPeca * VALOR_KM_MANUTENCAO_TROCA_PECA;
 
-        if (kmTotalAposRota >= proxPreventiva) {
+        if (kmTotal >= proxPreventiva) {
             multiplicadorManutencoesPreventiva++;
             aplicarManutencao("PREVENTIVA");
         }
 
-        if (kmTotalAposRota >= proxTrocaPeca) {
+        if (kmTotal >= proxTrocaPeca) {
             multiplicadorManutencoesTrocaPeca++;
             aplicarManutencao("TROCAPECA");
         }
