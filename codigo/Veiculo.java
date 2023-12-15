@@ -72,9 +72,9 @@ public class Veiculo {
      */
     public double kmTotal() {
         double somaDosKmTotal = 0;
-        somaDosKmTotal = mapaDeRotas.entrySet().stream()
-                .mapToDouble(e -> e.getValue().getQuilometragem())
-                .sum();
+        for (Rota rota : mapaDeRotas.values()) {
+            somaDosKmTotal += rota.getQuilometragem();
+        }
         return somaDosKmTotal;
     }
 
