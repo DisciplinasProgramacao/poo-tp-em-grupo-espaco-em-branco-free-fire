@@ -345,6 +345,7 @@ public class App {
                 }
                 default -> System.out.println("Opção inválida.");
             }
+            sc.nextLine();
         }
         return 0;
     }
